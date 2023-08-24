@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {AutomationItem, AutomationController} from "../../interfaces/automation-interfaces";
+import {TauriInteractionsService} from "../tauri-interactions.service";
 
 @Component({
   selector: 'control-panel',
@@ -11,10 +12,10 @@ export class ControlPanelComponent {
   public controller: AutomationController;
 
   public actionsList: AutomationItem[];
-  constructor() {
+  constructor(tauriService: TauriInteractionsService) {
     // TODO: remove example actions
     this.actionsList = [new AutomationItem(), new AutomationItem(), new AutomationItem()];
-    this.controller = new AutomationController(this.actionsList);
+    this.controller = new AutomationController(this.actionsList, tauriService);
   }
 
 }

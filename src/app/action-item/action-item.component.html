@@ -7,7 +7,7 @@ add
       <option>-</option>
       <option *ngFor="let type of Object.values(AutomationType)" [value]="type">{{type}}</option>
     </select>
-    <input *ngIf="action.type === AutomationType.WAIT" [(ngModel)]="action.duration" placeholder="Duration">
+    <input *ngIf="action.type === AutomationType.WAIT" [(ngModel)]="action.duration" placeholder="Duration (ms)">
     <input *ngIf="action.type === AutomationType.MOVE_MOUSE" [(ngModel)]="action.position.x" type="number" placeholder="X">
     <input *ngIf="action.type === AutomationType.MOVE_MOUSE" [(ngModel)]="action.position.y" type="number" placeholder="Y">
   </div>

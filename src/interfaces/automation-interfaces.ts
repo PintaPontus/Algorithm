@@ -1,13 +1,18 @@
+import {TauriInteractionsService} from "../app/tauri-interactions.service";
+
 export class AutomationController{
 
   private actionsList: AutomationItem[];
-  constructor(actionsList: AutomationItem[]) {
-    this.actionsList = actionsList
+  private tauriService: TauriInteractionsService;
+  constructor(actionsList: AutomationItem[], tauriService: TauriInteractionsService) {
+    this.actionsList = actionsList;
+    this.tauriService = tauriService;
   }
 
 
   play() {
     console.log("PLAY");
+    this.tauriService.click();
   }
 
   pause() {
