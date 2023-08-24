@@ -1,0 +1,18 @@
+:host{
+  display: flex;
+  height: 95vh;
+  width: 95vw;
+  background-color: rgb(40 40 40);
+  border-radius: 20px;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: clamp(1vh, 10px, 2vh);
+  gap: clamp(1vh, 10px, 2vh);
+}
+action-buttons{
+  height: clamp(50px, 10vh, 75px);
+}
+action-list{
+  flex: 5;
+}

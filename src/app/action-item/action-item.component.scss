@@ -1,0 +1,36 @@
+:host{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 75px;
+  border: 1px solid white;
+  border-radius: 15px;
+}
+.add-button{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.action-description{
+  margin: 0 15px;
+  flex: 4;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  gap: 2vw;
+  font-size: 2rem;
+}
+.action-description>*{
+  height: 2rem;
+  box-sizing: border-box;
+  font-size: 1.5rem;
+}
+.action-buttons{
+  margin: 8px;
+  flex: 1;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  height: 75%;
+}
