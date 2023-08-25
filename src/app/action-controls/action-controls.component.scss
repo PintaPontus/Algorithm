@@ -5,4 +5,41 @@
   justify-content: right;
   box-sizing: border-box;
   gap: clamp(1vw, 10px, 2vw);
+  font-size: 2rem;
+}
+dialog[open].import-dialog, dialog[open].export-dialog{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  top: 50%;
+  z-index: 10;
+  background-color: #505050;
+  border: 3px inset white;
+  border-radius: 20px;
+  transform: translateY(-50%);
+  gap: 5vh;
+}
+
+h3{
+  margin: 0;
+  padding: 0;
+}
+
+.import-textarea, .export-textarea{
+  resize: none;
+  width: 30vw;
+  height: 30vh;
+}
+
+.dialog-actions{
+  width: 100%;
+  display:flex;
+  align-items: center;
+  justify-content: space-between;
+}
+button{
+  flex:1;
+  font-size: 2rem;
+  border-radius: 20px;
 }

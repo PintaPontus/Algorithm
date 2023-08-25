@@ -1,7 +1,23 @@
 {{actualMouseCoords.x}} - {{actualMouseCoords.y}}
-<action-button (click)="play()" [color]="'purple'">download</action-button>
-<action-button (click)="play()" [color]="'pink'">upload</action-button>
+<action-button (click)="openImportDialog()" [color]="'purple'">download</action-button>
+<action-button (click)="openExportDialog()" [color]="'pink'">upload</action-button>
 <action-button (click)="play()" [color]="'lime'">play_arrow</action-button>
 <action-button (click)="pause()" [color]="'yellow'">pause</action-button>
 <action-button (click)="stop()" [color]="'red'">stop</action-button>
 <action-button (click)="add()" [color]="'lime'">add</action-button>
+<dialog class="import-dialog" [open]="importDialogOpen">
+  <h3>Import</h3>
+  <textarea class="import-textarea" [(ngModel)]="importText"></textarea>
+  <div class="dialog-actions">
+    <button (click)="importActions()">Import</button>
+    <button (click)="closeImportDialog()">Close</button>
+  </div>
+</dialog>
+<dialog class="export-dialog" [open]="exportDialogOpen">
+  <h3>Export</h3>
+  <textarea class="export-textarea" [(ngModel)]="exportText"></textarea>
+  <div class="dialog-actions">
+    <button (click)="copyActions()">Copy</button>
+    <button (click)="closeExportDialog()">Close</button>
+  </div>
+</dialog>

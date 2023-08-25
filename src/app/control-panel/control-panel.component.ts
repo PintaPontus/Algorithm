@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {AutomationItem, AutomationController, Position} from "../../interfaces/automation-interfaces";
+import {AutomationController, Position} from "../../interfaces/automation-interfaces";
 import {TauriInteractionsService} from "../tauri-interactions.service";
 
 @Component({
@@ -11,13 +11,11 @@ export class ControlPanelComponent {
 
   private tauriService: TauriInteractionsService;
   public controller: AutomationController;
-  public actionsList: AutomationItem[];
   public actualMouseCoords: Position = new Position();
 
   constructor(tauriService: TauriInteractionsService) {
     this.tauriService = tauriService;
-    this.actionsList = [];
-    this.controller = new AutomationController(this.actionsList, tauriService);
+    this.controller = new AutomationController([], tauriService);
     this.updateMouseCoords();
   }
 

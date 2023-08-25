@@ -11,33 +11,52 @@ export class ActionControlsComponent {
   public controller: AutomationController | undefined;
   @Input()
   public actualMouseCoords: Position = new Position();
+  public importDialogOpen: boolean = false;
+  public exportDialogOpen: boolean = false;
+  public importText: string = '';
+  public exportText: string = '';
 
   play() {
-    if(this.controller){
-      this.controller.play();
-    }else{
-      console.log("Unable to execute: PLAY");
-    }
+    this.controller?.play();
   }
   pause() {
-    if(this.controller){
-      this.controller.pause();
-    }else{
-      console.log("Unable to execute: PAUSE");
-    }
+    this.controller?.pause();
   }
   stop(){
-    if(this.controller){
-      this.controller.stop();
-    }else{
-      console.log("Unable to execute: STOP");
-    }
+    this.controller?.stop();
   }
   add(){
-    if(this.controller){
-      this.controller.add();
-    }else{
-      console.log("Unable to execute: ADD");
-    }
+    this.controller?.add();
+  }
+
+  importActions(){
+    this.controller?.import(this.importText);
+    this.closeImportDialog();
+  }
+
+  copyActions(){
+    navigator.clipboard.writeText(this.exportText)
+      .then(()=>{
+        console.log(this.exportText);
+        this.closeExportDialog();
+      })
+  }
+
+  openImportDialog() {
+    this.importText = '';
+    this.importDialogOpen = true;
+  }
+
+  closeImportDialog() {
+    this.importDialogOpen = false;
+  }
+
+  openExportDialog() {
+    this.exportText = this.controller?.export() || '';
+    this.exportDialogOpen = true;
+  }
+
+  closeExportDialog() {
+    this.exportDialogOpen = false;
   }
 }

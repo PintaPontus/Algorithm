@@ -4,7 +4,7 @@ export class AutomationController{
 
   private stopped: boolean = true;
   private executing: boolean = false;
-  private readonly actionsList: AutomationItem[];
+  public actionsList: AutomationItem[];
   private tauriService: TauriInteractionsService;
   constructor(actionsList: AutomationItem[], tauriService: TauriInteractionsService) {
     this.actionsList = actionsList;
@@ -56,6 +56,18 @@ export class AutomationController{
   add() {
     console.log("ADD");
     this.actionsList.push(new AutomationItem())
+  }
+
+  import(json: string){
+    console.log("IMPORT: ");
+    console.log(json);
+    console.log(JSON.parse(json));
+    this.actionsList = JSON.parse(json);
+    console.log(this.actionsList);
+  }
+
+  export(){
+    return JSON.stringify(this.actionsList);
   }
 }
 
