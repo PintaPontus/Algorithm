@@ -1,11 +1,19 @@
 :host{
   height: 100%;
   aspect-ratio: 1/1;
-  border: 1px solid white;
+  border: 3px outset aqua;
   border-radius: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 50px;
   cursor: pointer;
+}
+
+:host:hover{
+  background-color: grey;
+}
+
+:host:active{
+  background-color: black;
 }

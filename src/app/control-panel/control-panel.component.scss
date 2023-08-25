@@ -1,16 +1,16 @@
 :host{
   display: flex;
-  height: 95vh;
-  width: 95vw;
+  height: 97vh;
+  width: 100vw;
   background-color: rgb(40 40 40);
-  border-radius: 20px;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   flex-direction: column;
-  padding: clamp(1vh, 10px, 2vh);
+  padding: clamp(2vh, 20px, 3vh);
   gap: clamp(1vh, 10px, 2vh);
+  overflow: hidden;
 }
-action-buttons{
+action-controls{
   height: clamp(50px, 10vh, 75px);
 }
 action-list{

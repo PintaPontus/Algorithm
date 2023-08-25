@@ -2,11 +2,11 @@ import {Component, Input} from '@angular/core';
 import {AutomationController, Position} from "../../interfaces/automation-interfaces";
 
 @Component({
-  selector: 'action-buttons',
-  templateUrl: './action-buttons.component.html',
-  styleUrls: ['./action-buttons.component.scss']
+  selector: 'action-controls',
+  templateUrl: './action-controls.component.html',
+  styleUrls: ['./action-controls.component.scss']
 })
-export class ActionButtonsComponent {
+export class ActionControlsComponent {
   @Input()
   public controller: AutomationController | undefined;
   @Input()
