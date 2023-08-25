@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/tauri';
+import {Position} from "../interfaces/automation-interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -7,6 +8,11 @@ import { invoke } from '@tauri-apps/api/tauri';
 export class TauriInteractionsService {
 
   constructor() { }
+
+  public log_rust(msg: string) {
+    invoke('logging', {msg: String(msg)})
+      .then(()=>console.log("Logged"));
+  }
 
   public click(){
     invoke('click')
@@ -18,4 +24,11 @@ export class TauriInteractionsService {
       .then(()=>console.log("Moved to {} {}", x, y));
   }
 
+  async retrieveCoords() {
+    let result: any = await invoke('get_coords');
+    let position = new Position();
+    position.x = result.x;
+    position.y = result.y;
+    return position;
+  }
 }

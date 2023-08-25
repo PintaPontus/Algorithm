@@ -11,7 +11,11 @@
   },
   "tauri": {
     "allowlist": {
-      "all": false
+      "all": false,
+      "window": {
+        "setMinSize": true,
+        "setMaxSize": true
+      }
     },
     "bundle": {
       "active": true,
@@ -56,9 +60,9 @@
       {
         "fullscreen": false,
         "height": 600,
+        "width": 1200,
         "resizable": true,
-        "title": "Algorithm",
-        "width": 800
+        "title": "Algorithm"
       }
     ]
   }

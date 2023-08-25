@@ -1,3 +1,8 @@
-<action-item *ngFor="let actionItem of this.actionsList; index as i" [action]="actionItem" (delete)="remove(i)"></action-item>
+<action-item *ngFor="let actionItem of this.actionsList; index as i"
+             [ngStyle]="{'background-color':actionItem.active ? '#606060' : 'unset' }"
+             [action]="actionItem"
+             (delete)="remove(i)"
+             (clone)="clone(i)"
+></action-item>
 <action-item class="click-me" (click)="controller?.add()"></action-item>
 

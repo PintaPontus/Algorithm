@@ -4,14 +4,26 @@ add
 <ng-template [ngIf]="action">
   <div class="action-description">
     <select [(ngModel)]="action.type">
-      <option>-</option>
-      <option *ngFor="let type of Object.values(AutomationType)" [value]="type">{{type}}</option>
+      <option *ngFor="let type of Object.values(AutomationType); index as i" [value]="type" [selected]="i === 2">{{type}}</option>
     </select>
-    <input *ngIf="action.type === AutomationType.WAIT" [(ngModel)]="action.duration" placeholder="Duration (ms)">
-    <input *ngIf="action.type === AutomationType.MOVE_MOUSE" [(ngModel)]="action.position.x" type="number" placeholder="X">
-    <input *ngIf="action.type === AutomationType.MOVE_MOUSE" [(ngModel)]="action.position.y" type="number" placeholder="Y">
+    <input *ngIf="action.type === AutomationType.WAIT"
+           [(ngModel)]="action.duration"
+           type="number"
+           step="1000"
+           placeholder="Duration (ms)">
+    <input *ngIf="action.type === AutomationType.MOVE_MOUSE"
+           [(ngModel)]="action.position.x"
+           type="number"
+           step="100"
+           placeholder="X">
+    <input *ngIf="action.type === AutomationType.MOVE_MOUSE"
+           [(ngModel)]="action.position.y"
+           type="number"
+           step="100"
+           placeholder="Y">
   </div>
   <div class="action-buttons">
+    <action-button [color]="'lime'" (click)="cloneMe()">content_copy</action-button>
     <action-button [color]="'red'" (click)="deleteMe()">delete</action-button>
   </div>
 </ng-template>

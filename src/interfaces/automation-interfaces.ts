@@ -2,25 +2,55 @@ import {TauriInteractionsService} from "../app/tauri-interactions.service";
 
 export class AutomationController{
 
-  private actionsList: AutomationItem[];
+  private stopped: boolean = true;
+  private executing: boolean = false;
+  private readonly actionsList: AutomationItem[];
   private tauriService: TauriInteractionsService;
   constructor(actionsList: AutomationItem[], tauriService: TauriInteractionsService) {
     this.actionsList = actionsList;
     this.tauriService = tauriService;
   }
 
+  async automation_loop(){
+    for(let i = 0; !this.stopped; i=(i+1)%this.actionsList.length){
+      while(!this.executing){
+        await new Promise(f => setTimeout(f, 1000));
+      }
+      let actualItem = this.actionsList[i];
+      actualItem.active = true;
+      switch (actualItem.type){
+        case AutomationType.WAIT:
+          await new Promise(f => setTimeout(f, actualItem.duration));
+          break;
+        case AutomationType.CLICK_MOUSE:
+          this.tauriService.click();
+          break;
+        case AutomationType.MOVE_MOUSE:
+          this.tauriService.move(actualItem.position.x, actualItem.position.y);
+          break;
+      }
+      actualItem.active = false;
+    }
+  }
 
   play() {
     console.log("PLAY");
-    this.tauriService.click();
+    this.executing=true;
+    if(this.stopped){
+      this.stopped=false;
+      this.automation_loop();
+    }
   }
 
   pause() {
     console.log("PAUSE");
+    this.executing=false;
   }
 
   stop() {
     console.log("STOP");
+    this.stopped=true;
+    this.executing=false;
   }
 
   add() {
@@ -30,9 +60,10 @@ export class AutomationController{
 }
 
 export class AutomationItem {
-  public type: AutomationType | undefined;
+  public type: AutomationType = AutomationType.WAIT;
   public duration: number = 1000;
   public position: Position = new Position();
+  public active: boolean = false;
 }
 
 export enum AutomationType {

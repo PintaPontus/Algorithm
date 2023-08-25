@@ -3,33 +3,50 @@
   justify-content: space-between;
   align-items: center;
   min-height: 75px;
-  border: 1px solid white;
+  border: 1px solid yellow;
   border-radius: 15px;
 }
+
 .add-button{
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .action-description{
   margin: 0 15px;
-  flex: 4;
+  flex: 2;
   display: flex;
   justify-content: left;
   align-items: center;
+  flex-shrink: 5;
   gap: 2vw;
   font-size: 2rem;
 }
+
 .action-description>*{
-  height: 2rem;
+  height: 3rem;
   box-sizing: border-box;
-  font-size: 1.5rem;
+  font-size: 2rem;
+  background-color: aqua;
+  width: 100%;
+  flex: 1;
 }
+
+.action-description>select{
+  border-radius: 10px;
+}
+
+.action-description>input{
+  border-radius: 10px;
+}
+
 .action-buttons{
   margin: 8px;
   flex: 1;
   display: flex;
+  gap: 8px;
   justify-content: right;
   align-items: center;
   height: 75%;

@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {AutomationController} from "../../interfaces/automation-interfaces";
+import {AutomationController, Position} from "../../interfaces/automation-interfaces";
 
 @Component({
   selector: 'action-buttons',
@@ -9,6 +9,8 @@ import {AutomationController} from "../../interfaces/automation-interfaces";
 export class ActionButtonsComponent {
   @Input()
   public controller: AutomationController | undefined;
+  @Input()
+  public actualMouseCoords: Position = new Position();
 
   play() {
     if(this.controller){

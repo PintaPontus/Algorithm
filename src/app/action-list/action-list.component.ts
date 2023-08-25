@@ -16,4 +16,8 @@ export class ActionListComponent {
   remove(i: number) {
     this.actionsList?.splice(i, 1)
   }
+
+  clone(i: number) {
+    this.actionsList?.splice(i, 0, JSON.parse(JSON.stringify(this.actionsList[i])));
+  }
 }

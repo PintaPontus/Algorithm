@@ -13,8 +13,13 @@ export class ActionItemComponent {
   protected readonly Object = Object;
 
   @Output() delete: EventEmitter<any> = new EventEmitter();
+  @Output() clone: EventEmitter<AutomationItem> = new EventEmitter();
 
   deleteMe() {
     this.delete.emit(null);
+  }
+
+  cloneMe() {
+    this.clone.emit(this.action);
   }
 }
