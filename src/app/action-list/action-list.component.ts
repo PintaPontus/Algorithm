@@ -34,8 +34,6 @@ export class ActionListComponent {
     if(!dir){
       index++;
     }
-    let moving = this.actionsList[index];
-    this.actionsList[index] = this.actionsList[index-1];
-    this.actionsList[index-1] = moving;
+    [this.actionsList[index], this.actionsList[index-1]] = [this.actionsList[index-1], this.actionsList[index]];
   }
 }
