@@ -25,7 +25,6 @@ fn click() {
   let mouse = Mouse::new();
   thread::sleep(time::Duration::from_millis(1000));
   mouse.click(&Keys::LEFT).expect("Unable to click with mouse");
-  println!("Click Invoked From JS");
 }
 
 #[tauri::command]
@@ -33,14 +32,12 @@ fn move_mouse(x: i32, y: i32) {
   let mouse = Mouse::new();
   thread::sleep(time::Duration::from_millis(1000));
   mouse.move_to(x, y).expect("Unable to move mouse");
-  println!("Move To {} {} Invoked From JS!", x, y);
 }
 
 #[tauri::command]
 fn get_coords() -> Coords {
   let mouse = Mouse::new();
   let coords = Coords::new(mouse.get_position().expect("Unable to get mouse position"));
-  // println!("Mouse In {} {} Invoked From JS!", coords.x, coords.y);
   return coords;
 }
 

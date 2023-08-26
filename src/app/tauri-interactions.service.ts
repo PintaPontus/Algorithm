@@ -11,17 +11,14 @@ export class TauriInteractionsService {
 
   public log_rust(msg: string) {
     invoke('logging', {msg: String(msg)})
-      .then(()=>console.log("Logged"));
   }
 
   public click(){
     invoke('click')
-      .then(()=>console.log("Clicked"));
   }
 
   public move(x: number, y: number){
     invoke('move_mouse', {x: x, y: y})
-      .then(()=>console.log("Moved to {} {}", x, y));
   }
 
   async retrieveCoords() {

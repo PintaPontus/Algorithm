@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import {AutomationController, Position} from "../../interfaces/automation-interfaces";
+import {Position} from "../../interfaces/automation-interfaces";
 import {TauriInteractionsService} from "../tauri-interactions.service";
+import {AutomationService} from "../automation.service";
 
 @Component({
   selector: 'control-panel',
@@ -10,12 +11,12 @@ import {TauriInteractionsService} from "../tauri-interactions.service";
 export class ControlPanelComponent {
 
   private tauriService: TauriInteractionsService;
-  public controller: AutomationController;
+  public controller: AutomationService;
   public actualMouseCoords: Position = new Position();
 
-  constructor(tauriService: TauriInteractionsService) {
+  constructor(tauriService: TauriInteractionsService, controller: AutomationService) {
     this.tauriService = tauriService;
-    this.controller = new AutomationController([], tauriService);
+    this.controller = controller;
     this.updateMouseCoords();
   }
 
@@ -25,8 +26,7 @@ export class ControlPanelComponent {
         .then(coords => {
           this.actualMouseCoords.x = coords.x;
           this.actualMouseCoords.y = coords.y;
-        }).catch(e => {
-          console.error("ERRORE: ", e);
+        }).catch(_ => {
           clearInterval(updateCoordsLoop);
         });
     }, 250);

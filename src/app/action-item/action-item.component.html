@@ -23,6 +23,10 @@ add
            placeholder="Y">
   </div>
   <div class="action-buttons">
+    <div class="arrow-buttons">
+      <action-button class="up" (click)="moveUp()">arrow_drop_up</action-button>
+      <action-button class="down" (click)="moveDown()">arrow_drop_down</action-button>
+    </div>
     <action-button (click)="cloneMe()">content_copy</action-button>
     <action-button (click)="deleteMe()" [color]="'red'" [ngStyle]="{'border-color': 'red'}">delete</action-button>
   </div>

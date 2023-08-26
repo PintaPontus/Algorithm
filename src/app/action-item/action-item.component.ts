@@ -14,6 +14,7 @@ export class ActionItemComponent {
 
   @Output() delete: EventEmitter<any> = new EventEmitter();
   @Output() clone: EventEmitter<AutomationItem> = new EventEmitter();
+  @Output() move: EventEmitter<boolean> = new EventEmitter();
 
   deleteMe() {
     this.delete.emit(null);
@@ -21,5 +22,13 @@ export class ActionItemComponent {
 
   cloneMe() {
     this.clone.emit(this.action);
+  }
+
+  moveUp() {
+    this.move.emit(true);
+  }
+
+  moveDown() {
+    this.move.emit(false);
   }
 }

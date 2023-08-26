@@ -3,6 +3,7 @@
              [action]="actionItem"
              (delete)="remove(i)"
              (clone)="clone(i)"
+             (move)="move(i, $event)"
 ></action-item>
-<action-item class="click-me" (click)="controller?.add()"></action-item>
+<action-item class="click-me" (click)="controller.add()"></action-item>
 

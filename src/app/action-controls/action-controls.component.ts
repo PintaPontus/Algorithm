@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
-import {AutomationController, Position} from "../../interfaces/automation-interfaces";
+import {Position} from "../../interfaces/automation-interfaces";
+import {AutomationService} from "../automation.service";
 
 @Component({
   selector: 'action-controls',
@@ -7,8 +8,7 @@ import {AutomationController, Position} from "../../interfaces/automation-interf
   styleUrls: ['./action-controls.component.scss']
 })
 export class ActionControlsComponent {
-  @Input()
-  public controller: AutomationController | undefined;
+  public controller: AutomationService;
   @Input()
   public actualMouseCoords: Position = new Position();
   public importDialogOpen: boolean = false;
@@ -16,15 +16,18 @@ export class ActionControlsComponent {
   public importText: string = '';
   public exportText: string = '';
 
+  constructor(controller: AutomationService) {
+    this.controller = controller;
+  }
+
   importActions(){
-    this.controller?.import(this.importText);
+    this.controller.import(this.importText);
     this.closeImportDialog();
   }
 
   copyActions(){
     navigator.clipboard.writeText(this.exportText)
       .then(()=>{
-        console.log(this.exportText);
         this.closeExportDialog();
       })
   }
@@ -39,7 +42,7 @@ export class ActionControlsComponent {
   }
 
   openExportDialog() {
-    this.exportText = this.controller?.export() || '';
+    this.exportText = this.controller.export() || '';
     this.exportDialogOpen = true;
   }
 
