@@ -1,11 +1,11 @@
 [package]
-name = "app"
-version = "1.0.0"
-description = "A Tauri App"
-authors = ["you"]
-license = ""
-repository = ""
-default-run = "app"
+name = "algorithm"
+version = "1.1.0"
+description = "Algorithm: an automation app"
+authors = ["PintaPontus"]
+license = "GNUv3"
+repository = "https://github.com/PintaPontus/Algorithm"
+default-run = "algorithm"
 edition = "2021"
 rust-version = "1.60"
 
