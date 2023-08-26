@@ -1,12 +1,34 @@
-{{actualMouseCoords.x}} - {{actualMouseCoords.y}}
-<action-button (click)="openImportDialog()">download</action-button>
-<action-button (click)="openExportDialog()">upload</action-button>
-<action-button (click)="controller.play()" [color]="'lime'" [ngStyle]="{'border-color': 'lime'}">play_arrow</action-button>
-<action-button (click)="controller.pause()">pause</action-button>
-<action-button (click)="controller.stop()" [color]="'red'" [ngStyle]="{'border-color': 'red'}">stop</action-button>
-<action-button (click)="controller.add()" [color]="'lime'" [ngStyle]="{'border-color': 'lime'}">add</action-button>
+<div class="action-delay">
+  DELAY:
+  <select [(ngModel)]="controller.delay">
+    <option [value]="0">None</option>
+    <option [value]="100">100ms</option>
+    <option [value]="250">250ms</option>
+    <option [value]="500">500ms</option>
+    <option [value]="1000">1000ms</option>
+  </select>
+</div>
+<div class="mouse-pos">
+  <div class="mouse-x">
+    {{actualMouseCoords.x}}
+  </div>
+  <div class="mouse-separator">
+    :
+  </div>
+  <div class="mouse-y">
+    {{actualMouseCoords.y}}
+  </div>
+</div>
+<div class="action-buttons">
+  <action-button (click)="openImportDialog()">download</action-button>
+  <action-button (click)="openExportDialog()">upload</action-button>
+  <action-button (click)="controller.play()" [color]="'lime'" [ngStyle]="{'border-color': 'lime'}">play_arrow</action-button>
+  <action-button (click)="controller.pause()">pause</action-button>
+  <action-button (click)="controller.stop()" [color]="'red'" [ngStyle]="{'border-color': 'red'}">stop</action-button>
+  <action-button (click)="controller.add()" [color]="'lime'" [ngStyle]="{'border-color': 'lime'}">add</action-button>
+</div>
 <dialog class="import-dialog" [open]="importDialogOpen">
-  <h3>Import</h3>
+  <h2>Import</h2>
   <textarea class="import-textarea" [(ngModel)]="importText"></textarea>
   <div class="dialog-actions">
     <button (click)="importActions()">Import</button>
@@ -14,7 +36,7 @@
   </div>
 </dialog>
 <dialog class="export-dialog" [open]="exportDialogOpen">
-  <h3>Export</h3>
+  <h2>Export</h2>
   <textarea class="export-textarea" [(ngModel)]="exportText"></textarea>
   <div class="dialog-actions">
     <button (click)="copyActions()">Copy</button>

@@ -4,10 +4,10 @@
   width: 100vw;
   background-color: rgb(40 40 40);
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch;
   flex-direction: column;
   padding: clamp(2vh, 20px, 3vh);
-  gap: clamp(1vh, 10px, 2vh);
+  gap: clamp(2vh, 20px, 4vh);
   overflow: hidden;
 }
 action-controls{

@@ -7,10 +7,11 @@ import {AutomationItem, AutomationType} from "../interfaces/automation-interface
 })
 export class AutomationService {
 
+  private tauriService: TauriInteractionsService;
+  public actionsList: AutomationItem[] = [];
   private stopped: boolean = true;
   private executing: boolean = false;
-  public actionsList: AutomationItem[] = [];
-  private tauriService: TauriInteractionsService;
+  public delay: number = 100;
   constructor(tauriService: TauriInteractionsService) {
     this.tauriService = tauriService;
   }
@@ -20,7 +21,7 @@ export class AutomationService {
     let previousItem: AutomationItem | undefined;
     for(let i = 0; !this.stopped && this.actionsList.length > 0; i=(i+1)%this.actionsList.length){
       while(!this.executing){
-        await new Promise(f => setTimeout(f, 1000));
+        await new Promise(f => setTimeout(f, this.delay>250 ? this.delay : 250));
       }
 
       if(previousItem){
@@ -41,6 +42,7 @@ export class AutomationService {
           break;
       }
       previousItem = actualItem;
+      await new Promise(f => setTimeout(f, this.delay));
     }
     if(previousItem){
       previousItem.active = false;

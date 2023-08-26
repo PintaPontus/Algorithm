@@ -2,11 +2,57 @@
   display: flex;
   width: 100%;
   align-items: center;
+  justify-content: center;
+}
+
+.action-delay{
+  flex: 5;
+  font-size: 1.5rem;
+}
+
+.action-delay>select{
+  font-size: 1.5rem;
+  border-radius: 10px;
+  background-color: dodgerblue;
+}
+
+.mouse-pos{
+  flex: 2;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.mouse-pos>*{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mouse-x, .mouse-y{
+  flex: 5;
+}
+
+.mouse-separator{
+  flex: 1;
+}
+
+.action-buttons{
+  flex: 5;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
   justify-content: right;
   box-sizing: border-box;
   gap: clamp(1vw, 10px, 2vw);
-  font-size: 2rem;
 }
+
+action-button{
+  height: 100%;
+}
+
+
 dialog[open].import-dialog, dialog[open].export-dialog{
   display: flex;
   align-items: center;
@@ -14,19 +60,22 @@ dialog[open].import-dialog, dialog[open].export-dialog{
   flex-direction: column;
   top: 50%;
   z-index: 10;
-  background-color: #505050;
-  border: 3px inset white;
-  border-radius: 20px;
+  background-color: midnightblue;
+  border: 5px inset dodgerblue;
+  color: white;
+  border-radius: 10px;
   transform: translateY(-50%);
-  gap: 5vh;
+  gap: 2vh;
 }
 
-h3{
+dialog[open]>h2{
   margin: 0;
   padding: 0;
+  text-transform: uppercase;
 }
 
-.import-textarea, .export-textarea{
+dialog[open]>textarea{
+  border-radius: 10px;
   resize: none;
   width: 30vw;
   height: 30vh;
@@ -36,11 +85,25 @@ h3{
   width: 100%;
   display:flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
+  gap: 2vw;
 }
-button{
+
+.dialog-actions>button{
   flex:1;
   font-size: 2rem;
-  border-radius: 20px;
+  border-radius: 10px;
+  background-color: dodgerblue;
+  border: 3px inset dodgerblue;
+  cursor: pointer;
 }
+
+.dialog-actions>button:hover{
+  background-color: steelblue;
+}
+
+.dialog-actions>button:active{
+  background-color: midnightblue;
+}
+
 

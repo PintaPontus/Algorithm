@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {Position} from "../../interfaces/automation-interfaces";
+import {AutomationType, Position} from "../../interfaces/automation-interfaces";
 import {AutomationService} from "../automation.service";
 
 @Component({
@@ -49,4 +49,7 @@ export class ActionControlsComponent {
   closeExportDialog() {
     this.exportDialogOpen = false;
   }
+
+  protected readonly AutomationType = AutomationType;
+  protected readonly Object = Object;
 }
