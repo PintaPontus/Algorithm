@@ -10,25 +10,27 @@ export class TauriInteractionsService {
   constructor() { }
 
   public log_rust(msg: string) {
-    invoke('logging', {msg: String(msg)})
+    invoke('logging', {msg: String(msg)});
   }
 
-  public click(){
-    invoke('click')
+  public async click(){
+    await invoke('click');
   }
 
-  public move(x: number, y: number){
-    invoke('move_mouse', {x: x, y: y})
+  public async move(x: number, y: number){
+    await invoke('move_mouse', {x: x, y: y});
   }
 
   async retrieveCoords() {
-    let result: any;
-    await invoke('get_coords')
-      .then(c=> result = c)
-      .catch(()=>{});
     let position = new Position();
-    position.x = result.x;
-    position.y = result.y;
+    await invoke('get_coords')
+      .then(result=> {
+        // @ts-ignore
+        position.x = result.x;
+        // @ts-ignore
+        position.y = result.y;
+      })
+      .catch(()=>{});
     return position;
   }
 }

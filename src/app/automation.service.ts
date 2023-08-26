@@ -34,10 +34,10 @@ export class AutomationService {
           await new Promise(f => setTimeout(f, actualItem.duration));
           break;
         case AutomationType.CLICK_MOUSE:
-          this.tauriService.click();
+          await this.tauriService.click();
           break;
         case AutomationType.MOVE_MOUSE:
-          this.tauriService.move(actualItem.position.x, actualItem.position.y);
+          await this.tauriService.move(actualItem.position.x, actualItem.position.y);
           break;
       }
       previousItem = actualItem;
