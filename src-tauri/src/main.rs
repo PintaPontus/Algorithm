@@ -2,7 +2,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use mouse_rs::{Mouse};
-use std::{thread, time};
 use mouse_rs::types::keys::Keys;
 use mouse_rs::types::Point;
 use serde::ser::SerializeStruct;
@@ -23,14 +22,12 @@ fn logging(msg: String){
 #[tauri::command]
 fn click() {
   let mouse = Mouse::new();
-  thread::sleep(time::Duration::from_millis(1000));
   mouse.click(&Keys::LEFT).expect("Unable to click with mouse");
 }
 
 #[tauri::command]
 fn move_mouse(x: i32, y: i32) {
   let mouse = Mouse::new();
-  thread::sleep(time::Duration::from_millis(1000));
   mouse.move_to(x, y).expect("Unable to move mouse");
 }
 
