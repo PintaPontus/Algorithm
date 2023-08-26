@@ -1,10 +1,10 @@
 {{actualMouseCoords.x}} - {{actualMouseCoords.y}}
-<action-button (click)="openImportDialog()" [color]="'purple'">download</action-button>
-<action-button (click)="openExportDialog()" [color]="'pink'">upload</action-button>
-<action-button (click)="play()" [color]="'lime'">play_arrow</action-button>
-<action-button (click)="pause()" [color]="'yellow'">pause</action-button>
-<action-button (click)="stop()" [color]="'red'">stop</action-button>
-<action-button (click)="add()" [color]="'lime'">add</action-button>
+<action-button (click)="openImportDialog()">download</action-button>
+<action-button (click)="openExportDialog()">upload</action-button>
+<action-button (click)="controller?.play()" [color]="'lime'" [ngStyle]="{'border-color': 'lime'}">play_arrow</action-button>
+<action-button (click)="controller?.pause()">pause</action-button>
+<action-button (click)="controller?.stop()" [color]="'red'" [ngStyle]="{'border-color': 'red'}">stop</action-button>
+<action-button (click)="controller?.add()" [color]="'lime'" [ngStyle]="{'border-color': 'lime'}">add</action-button>
 <dialog class="import-dialog" [open]="importDialogOpen">
   <h3>Import</h3>
   <textarea class="import-textarea" [(ngModel)]="importText"></textarea>

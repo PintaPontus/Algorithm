@@ -16,19 +16,6 @@ export class ActionControlsComponent {
   public importText: string = '';
   public exportText: string = '';
 
-  play() {
-    this.controller?.play();
-  }
-  pause() {
-    this.controller?.pause();
-  }
-  stop(){
-    this.controller?.stop();
-  }
-  add(){
-    this.controller?.add();
-  }
-
   importActions(){
     this.controller?.import(this.importText);
     this.closeImportDialog();

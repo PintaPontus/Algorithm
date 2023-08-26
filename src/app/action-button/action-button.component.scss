@@ -1,8 +1,9 @@
 :host{
   height: 100%;
   aspect-ratio: 1/1;
-  border: 3px outset aqua;
+  border: 3px outset dodgerblue;
   border-radius: 15px;
+  background-color: dodgerblue;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,9 +12,9 @@
 }
 
 :host:hover{
-  background-color: grey;
+  background-color: steelblue;
 }
 
 :host:active{
-  background-color: black;
+  background-color: midnightblue;
 }

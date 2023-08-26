@@ -7,6 +7,6 @@ import {Component, Input} from '@angular/core';
 })
 export class ActionButtonComponent {
   @Input()
-  public color: string | undefined;
+  public color: string = 'black';
 
 }

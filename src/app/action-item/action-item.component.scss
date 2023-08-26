@@ -3,8 +3,12 @@
   justify-content: space-between;
   align-items: center;
   min-height: 75px;
-  border: 3px outset yellow;
+  border: 3px outset navy;
   border-radius: 15px;
+}
+
+:host.click-me{
+  border: 3px outset lime;
 }
 
 .add-button{
@@ -29,7 +33,7 @@
   height: 3rem;
   box-sizing: border-box;
   font-size: 2rem;
-  background-color: aqua;
+  background-color: dodgerblue;
   width: 100%;
   flex: 1;
 }

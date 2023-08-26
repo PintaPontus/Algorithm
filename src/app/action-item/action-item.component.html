@@ -23,7 +23,7 @@ add
            placeholder="Y">
   </div>
   <div class="action-buttons">
-    <action-button [color]="'lime'" (click)="cloneMe()">content_copy</action-button>
-    <action-button [color]="'red'" (click)="deleteMe()">delete</action-button>
+    <action-button (click)="cloneMe()">content_copy</action-button>
+    <action-button (click)="deleteMe()" [color]="'red'" [ngStyle]="{'border-color': 'red'}">delete</action-button>
   </div>
 </ng-template>

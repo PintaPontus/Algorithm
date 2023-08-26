@@ -12,12 +12,19 @@ export class AutomationController{
   }
 
   async automation_loop(){
-    for(let i = 0; !this.stopped; i=(i+1)%this.actionsList.length){
+    let actualItem: AutomationItem;
+    let previousItem: AutomationItem | undefined;
+    for(let i = 0; !this.stopped && this.actionsList.length > 0; i=(i+1)%this.actionsList.length){
       while(!this.executing){
         await new Promise(f => setTimeout(f, 1000));
       }
-      let actualItem = this.actionsList[i];
+
+      if(previousItem){
+        previousItem.active = false;
+      }
+      actualItem = this.actionsList[i];
       actualItem.active = true;
+
       switch (actualItem.type){
         case AutomationType.WAIT:
           await new Promise(f => setTimeout(f, actualItem.duration));
@@ -29,7 +36,10 @@ export class AutomationController{
           this.tauriService.move(actualItem.position.x, actualItem.position.y);
           break;
       }
-      actualItem.active = false;
+      previousItem = actualItem;
+    }
+    if(previousItem){
+      previousItem.active = false;
     }
   }
 

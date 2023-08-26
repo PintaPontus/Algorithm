@@ -19,12 +19,16 @@ export class ControlPanelComponent {
     this.updateMouseCoords();
   }
 
-  async updateMouseCoords(){
-    setInterval(()=>{
-      this.tauriService.retrieveCoords().then(coords => {
-        this.actualMouseCoords.x = coords.x;
-        this.actualMouseCoords.y = coords.y;
-      });
-    }, 200);
+  updateMouseCoords(){
+    let updateCoordsLoop = setInterval(()=>{
+      this.tauriService.retrieveCoords()
+        .then(coords => {
+          this.actualMouseCoords.x = coords.x;
+          this.actualMouseCoords.y = coords.y;
+        }).catch(e => {
+          console.error("ERRORE: ", e);
+          clearInterval(updateCoordsLoop);
+        });
+    }, 250);
   }
 }

@@ -25,7 +25,10 @@ export class TauriInteractionsService {
   }
 
   async retrieveCoords() {
-    let result: any = await invoke('get_coords');
+    let result: any;
+    await invoke('get_coords')
+      .then(c=> result = c)
+      .catch(()=>{});
     let position = new Position();
     position.x = result.x;
     position.y = result.y;

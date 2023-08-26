@@ -1,5 +1,5 @@
 <action-item *ngFor="let actionItem of this.actionsList; index as i"
-             [ngStyle]="{'background-color':actionItem.active ? '#606060' : 'unset' }"
+             [ngStyle]="{'background-color':actionItem.active ? '#606060' : 'midnightblue' }"
              [action]="actionItem"
              (delete)="remove(i)"
              (clone)="clone(i)"
