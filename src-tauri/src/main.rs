@@ -1,16 +1,20 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod coords;
+
+use coords::Coords;
+
 use std::env;
-use std::fs::File;
+use std::fs::{create_dir_all, File};
 use std::fs::OpenOptions;
+use std::path::Path;
 use std::io::{Read, Write};
 use std::os::windows::fs::{OpenOptionsExt};
 use mouse_rs::{Mouse};
 use mouse_rs::types::keys::Keys;
-use mouse_rs::types::Point;
-use serde::ser::SerializeStruct;
-use serde::{Serializer};
+
+const FILE_ATTRIBUTE_HIDDEN: u32 = 2;
 
 fn main() {
   tauri::Builder::default()
@@ -33,7 +37,19 @@ fn get_current_dir() -> String {
 
 #[tauri::command]
 fn save_file(path: String, content: String, hidden: bool){
-  const FILE_ATTRIBUTE_HIDDEN: u32 = 2;
+
+  match path.rfind('\\') {
+    Some(slash_index) => {
+      let file_dir = (&path[..slash_index]).to_string();
+
+      let path_to_file_dir = Path::new(&file_dir);
+
+      if !path_to_file_dir.exists() {
+        create_dir_all(&file_dir).expect("Unable to create missing dir");
+      }
+    }
+    None => {}
+  }
 
   let mut binding = OpenOptions::new();
   let open_options = binding.write(true).create(true);
@@ -84,24 +100,3 @@ fn get_coords() -> Coords {
   return coords;
 }
 
-pub struct Coords {
-  pub x: i32,
-  pub y: i32,
-}
-impl Coords{
-  pub fn new(p: Point) -> Self{
-    return Coords{
-      x: p.x,
-      y: p.y
-    };
-  }
-}
-
-impl serde::ser::Serialize for Coords{
-  fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error> where S: Serializer {
-    let mut state = serializer.serialize_struct("Coords", 2)?;
-    state.serialize_field("x", &self.x)?;
-    state.serialize_field("y", &self.y)?;
-    state.end()
-  }
-}
