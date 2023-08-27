@@ -22,6 +22,8 @@
 <div class="action-buttons">
   <action-button (click)="openImportDialog()">download</action-button>
   <action-button (click)="openExportDialog()">upload</action-button>
+  <action-button (click)="saveActions()">save</action-button>
+  <action-button (click)="openActions()">folder_open</action-button>
   <action-button (click)="controller.play()" [color]="'lime'" [ngStyle]="{'border-color': 'lime'}">play_arrow</action-button>
   <action-button (click)="controller.pause()">pause</action-button>
   <action-button (click)="controller.stop()" [color]="'red'" [ngStyle]="{'border-color': 'red'}">stop</action-button>
@@ -32,7 +34,7 @@
   <textarea class="import-textarea" [(ngModel)]="importText"></textarea>
   <div class="dialog-actions">
     <button (click)="importActions()">Import</button>
-    <button (click)="closeImportDialog()">Close</button>
+    <button (click)="closeDialogs()">Close</button>
   </div>
 </dialog>
 <dialog class="export-dialog" [open]="exportDialogOpen">
@@ -40,6 +42,6 @@
   <textarea class="export-textarea" [(ngModel)]="exportText"></textarea>
   <div class="dialog-actions">
     <button (click)="copyActions()">Copy</button>
-    <button (click)="closeExportDialog()">Close</button>
+    <button (click)="closeDialogs()">Close</button>
   </div>
 </dialog>

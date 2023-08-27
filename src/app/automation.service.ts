@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {TauriInteractionsService} from "./tauri-interactions.service";
 import {AutomationItem, AutomationType} from "../interfaces/automation-interfaces";
+import {appWindow} from "@tauri-apps/api/window";
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,25 @@ export class AutomationService {
   private stopped: boolean = true;
   private executing: boolean = false;
   public delay: number = 100;
+  private SAVINGS_FILE_PATH: string = ".algorithm-actions.json";
+  public CURRENT_DIR: string = "";
+  public DEFAULT_FILE_PATH: string = "";
   constructor(tauriService: TauriInteractionsService) {
     this.tauriService = tauriService;
+
+    this.setCurrentPath();
+
+    this.openActions(this.SAVINGS_FILE_PATH);
+
+    appWindow.listen("tauri://close-requested", async () => {
+      await this.saveActionsToFile(this.SAVINGS_FILE_PATH, true);
+      await appWindow.close();
+    });
+  }
+
+  async setCurrentPath(){
+    this.CURRENT_DIR = await this.tauriService.getCurrentDir();
+    this.DEFAULT_FILE_PATH = this.CURRENT_DIR + "algorithm-actions.json";
   }
 
   async automation_loop(){
@@ -76,5 +94,21 @@ export class AutomationService {
 
   export(){
     return JSON.stringify(this.actionsList);
+  }
+
+  async saveActions(path: string) {
+    await this.saveActionsToFile(path, false);
+  }
+
+  private async saveActionsToFile(path: string, hidden: boolean) {
+    await this.tauriService.saveFile(path, this.export(), hidden);
+  }
+
+  async openActions(path: string){
+    await this.tauriService.openFile(path).then(content => {
+      if(content !== ""){
+        this.actionsList = JSON.parse(content);
+      }
+    });
   }
 }

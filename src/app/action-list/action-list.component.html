@@ -1,4 +1,4 @@
-<action-item *ngFor="let actionItem of this.actionsList; index as i"
+<action-item *ngFor="let actionItem of this.controller.actionsList; index as i"
              [ngStyle]="{'background-color':actionItem.active ? 'deepskyblue' : 'midnightblue' }"
              [action]="actionItem"
              (delete)="remove(i)"

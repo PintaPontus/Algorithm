@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import {appWindow, PhysicalSize} from '@tauri-apps/api/window';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +7,4 @@ import {appWindow, PhysicalSize} from '@tauri-apps/api/window';
 })
 export class AppComponent {
   title = 'algorithm';
-  constructor() {
-    appWindow.setMinSize(new PhysicalSize(1200, 600));
-  }
 }

@@ -14,7 +14,13 @@
       "all": false,
       "window": {
         "setMinSize": true,
-        "setMaxSize": true
+        "close": true
+      },
+      "path": {
+        "all": true
+      },
+      "dialog": {
+        "all": true
       }
     },
     "bundle": {

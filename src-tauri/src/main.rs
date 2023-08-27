@@ -1,6 +1,11 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use std::env;
+use std::fs::File;
+use std::fs::OpenOptions;
+use std::io::{Read, Write};
+use std::os::windows::fs::{OpenOptionsExt};
 use mouse_rs::{Mouse};
 use mouse_rs::types::keys::Keys;
 use mouse_rs::types::Point;
@@ -9,9 +14,50 @@ use serde::{Serializer};
 
 fn main() {
   tauri::Builder::default()
-    .invoke_handler(tauri::generate_handler![logging, click, move_mouse, get_coords])
+    .invoke_handler(tauri::generate_handler![
+      get_current_dir, save_file, open_file, logging, click, move_mouse, get_coords
+    ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
+}
+
+#[tauri::command]
+fn get_current_dir() -> String {
+  return env::current_dir()
+    .expect("Unable to retrieve current dir")
+    .as_path()
+    .to_str()
+    .expect("No current dir")
+    .to_string();
+}
+
+#[tauri::command]
+fn save_file(path: String, content: String, hidden: bool){
+  const FILE_ATTRIBUTE_HIDDEN: u32 = 2;
+
+  let mut binding = OpenOptions::new();
+  let open_options = binding.write(true).create(true);
+
+  if hidden {
+    open_options.attributes(FILE_ATTRIBUTE_HIDDEN);
+  }
+
+  let mut file = open_options.open(path).expect("Unable to use file");
+
+  file.write_all(content.as_ref()).expect("Unable to write file");
+}
+
+#[tauri::command]
+fn open_file(path: String) -> String {
+  let mut contents = String::new();
+  let file = File::open(&path);
+  match file {
+    Ok(mut f) => {
+      f.read_to_string(&mut contents).expect("Unable to read file");
+    }
+    Err(_) => {}
+  }
+  return contents;
 }
 
 #[tauri::command]
