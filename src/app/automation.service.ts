@@ -3,6 +3,7 @@ import {TauriInteractionsService} from "./tauri-interactions.service";
 import {AutomationItem, AutomationType} from "../interfaces/automation-interfaces";
 import {appWindow} from "@tauri-apps/api/window";
 import {appConfigDir} from "@tauri-apps/api/path";
+import {confirm} from "@tauri-apps/api/dialog";
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,9 @@ export class AutomationService {
     this.initSettings();
 
     appWindow.listen("tauri://close-requested", async () => {
-      await this.saveActionsToFile(await appConfigDir() + this.SETTINGS_FILE_NAME, true);
+      if(await confirm("Save before exit?", {okLabel: "Save", cancelLabel: "Don't Save"})){
+        await this.saveActionsToFile(await appConfigDir() + this.SETTINGS_FILE_NAME, true);
+      }
       await appWindow.close();
     });
   }
