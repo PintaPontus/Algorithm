@@ -14,10 +14,35 @@ use std::os::windows::fs::{OpenOptionsExt};
 use mouse_rs::{Mouse};
 use mouse_rs::types::keys::Keys;
 
+use tauri::{CustomMenuItem, SystemTray, SystemTrayMenu, SystemTrayMenuItem, SystemTrayEvent, Manager};
+
 const FILE_ATTRIBUTE_HIDDEN: u32 = 2;
 
 fn main() {
+  // let quit = CustomMenuItem::new("quit".to_string(), "Quit");
+  let show = CustomMenuItem::new("show".to_string(), "Show");
+  let tray_menu = SystemTrayMenu::new()
+    // .add_item(quit)
+    // .add_native_item(SystemTrayMenuItem::Separator)
+    .add_item(show);
+
   tauri::Builder::default()
+    .system_tray(SystemTray::new().with_menu(tray_menu))
+    .on_system_tray_event(|app, event| match event {
+      SystemTrayEvent::MenuItemClick { id, .. } => {
+        match id.as_str() {
+          // "quit" => {
+          //   std::process::exit(0);
+          // }
+          "show" => {
+            let window = app.get_window("main").unwrap();
+            window.show().unwrap();
+          }
+          _ => {}
+        }
+      }
+      _ => {}
+    })
     .invoke_handler(tauri::generate_handler![
       get_current_dir, save_file, open_file, logging, click, move_mouse, get_coords
     ])

@@ -6,7 +6,7 @@
     "distDir": "../dist/algorithm"
   },
   "package": {
-    "productName": "algorithm",
+    "productName": "Algorithm",
     "version": "1.1.0"
   },
   "tauri": {
@@ -14,7 +14,8 @@
       "all": false,
       "window": {
         "setMinSize": true,
-        "close": true
+        "close": true,
+        "hide": true
       },
       "path": {
         "all": true
@@ -38,7 +39,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.pinta.algorithm",
+      "identifier": "Algorithm",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -55,6 +56,10 @@
         "digestAlgorithm": "sha256",
         "timestampUrl": ""
       }
+    },
+    "systemTray": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true
     },
     "security": {
       "csp": null
