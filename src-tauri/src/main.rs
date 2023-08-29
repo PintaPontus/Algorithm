@@ -27,6 +27,16 @@ fn main() {
     .add_item(show);
 
   tauri::Builder::default()
+    // TODO: remove call to setup to remove devtools
+    // .setup(|app| {
+    //   #[cfg(debug_assertions)] // only include this code on debug builds
+    //   {
+    //     let window = app.get_window("main").unwrap();
+    //     window.open_devtools();
+    //     window.close_devtools();
+    //   }
+    //   Ok(())
+    // })
     .system_tray(SystemTray::new().with_menu(tray_menu))
     .on_system_tray_event(|app, event| match event {
       SystemTrayEvent::MenuItemClick { id, .. } => {
