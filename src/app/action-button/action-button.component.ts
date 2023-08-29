@@ -1,15 +1,13 @@
-import {Component, HostBinding, Input, OnChanges, OnInit} from '@angular/core';
+import {Component, HostBinding, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'action-button',
   templateUrl: './action-button.component.html',
   styleUrls: ['./action-button.component.scss']
 })
-export class ActionButtonComponent implements OnInit, OnChanges{
+export class ActionButtonComponent implements OnInit{
   @Input()
   public color: string | undefined;
-  @Input()
-  public filled: boolean = false;
   public textColor: string = 'black';
 
   @HostBinding('style.background-color') backgroundColor!: string;
@@ -17,15 +15,9 @@ export class ActionButtonComponent implements OnInit, OnChanges{
 
   ngOnInit() {
     if(this.color){
-      this.backgroundColor = this.filled ? this.color : 'midnightblue';
+      this.backgroundColor = 'midnightblue';
       this.borderColor = this.color;
-      this.textColor = 'white';
-    }
-  }
-
-  ngOnChanges() {
-    if(this.color) {
-      this.backgroundColor = this.filled ? this.color : 'midnightblue';
+      this.textColor = this.color;
     }
   }
 
