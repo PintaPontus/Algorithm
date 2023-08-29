@@ -39,7 +39,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "Algorithm",
+      "identifier": "com.pinta.algorithm",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -70,8 +70,9 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
+        "center" : true,
         "width": 1200,
+        "height": 600,
         "resizable": true,
         "title": "Algorithm"
       }

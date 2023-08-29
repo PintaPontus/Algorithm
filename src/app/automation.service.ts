@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import {TauriInteractionsService} from "./tauri-interactions.service";
 import {AutomationItem, AutomationType} from "../interfaces/automation-interfaces";
 import {appConfigDir} from "@tauri-apps/api/path";
+import {appWindow, LogicalSize} from "@tauri-apps/api/window";
+import {confirm} from "@tauri-apps/api/dialog";
 
 @Injectable({
   providedIn: 'root'
@@ -18,12 +20,33 @@ export class AutomationService {
   constructor(tauriService: TauriInteractionsService) {
     this.tauriService = tauriService;
 
+    this.initWindow();
     this.initSettings();
   }
 
+  private initWindow(){
+    Promise.allSettled([
+      appWindow.setMinSize(new LogicalSize(1200, 600)),
+      appWindow.listen("tauri://close-requested", async () => {
+        if(await confirm("Close App?", {okLabel: "Minimize", cancelLabel: "Close"})){
+          await appWindow.hide();
+        }else{
+          await this.saveBeforeExit();
+          await appWindow.close();
+        }
+      })
+    ]).then(r => {
+      this.tauriService.log_rust(`Init Window Done: ${JSON.stringify(r)}`);
+    });
+  }
+
   private async initSettings(){
-    await this.setPaths();
-    await this.openActions(await appConfigDir() + this.SETTINGS_FILE_NAME);
+    Promise.allSettled([
+      this.setPaths(),
+      this.openActions(await appConfigDir() + this.SETTINGS_FILE_NAME)
+    ]).then(r => {
+      this.tauriService.log_rust(`Init Settings Done: ${JSON.stringify(r)}`);
+    });
   }
 
   private async setPaths(){

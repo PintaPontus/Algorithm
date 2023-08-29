@@ -19,11 +19,11 @@ use tauri::{CustomMenuItem, SystemTray, SystemTrayMenu, SystemTrayMenuItem, Syst
 const FILE_ATTRIBUTE_HIDDEN: u32 = 2;
 
 fn main() {
-  // let quit = CustomMenuItem::new("quit".to_string(), "Quit");
+  let quit = CustomMenuItem::new("quit".to_string(), "Quit");
   let show = CustomMenuItem::new("show".to_string(), "Show");
   let tray_menu = SystemTrayMenu::new()
-    // .add_item(quit)
-    // .add_native_item(SystemTrayMenuItem::Separator)
+    .add_item(quit)
+    .add_native_item(SystemTrayMenuItem::Separator)
     .add_item(show);
 
   tauri::Builder::default()
@@ -31,9 +31,9 @@ fn main() {
     .on_system_tray_event(|app, event| match event {
       SystemTrayEvent::MenuItemClick { id, .. } => {
         match id.as_str() {
-          // "quit" => {
-          //   std::process::exit(0);
-          // }
+          "quit" => {
+            std::process::exit(0);
+          }
           "show" => {
             let window = app.get_window("main").unwrap();
             window.show().unwrap();

@@ -1,16 +1,11 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/tauri';
 import {Position} from "../interfaces/automation-interfaces";
-import {appWindow, PhysicalSize} from "@tauri-apps/api/window";
 
 @Injectable({
   providedIn: 'root'
 })
 export class TauriInteractionsService {
-
-  constructor() {
-    appWindow.setMinSize(new PhysicalSize(1200, 600));
-  }
 
   public async getCurrentDir(){
     return String( await invoke('get_current_dir'));
