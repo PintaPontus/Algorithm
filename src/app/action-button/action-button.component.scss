@@ -12,10 +12,14 @@
   user-select: none;
 }
 
+.material-symbols-outlined{
+  color: black;
+}
+
 :host:hover{
-  background-color: steelblue;
+  opacity: 0.8;
 }
 
 :host:active{
-  background-color: midnightblue;
+  opacity: 0.6;
 }

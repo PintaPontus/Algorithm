@@ -86,6 +86,10 @@ export class AutomationService {
     }
   }
 
+  isWorking() {
+    return !this.stopped;
+  }
+
   play() {
     this.executing=true;
     if(this.stopped){
@@ -134,4 +138,5 @@ export class AutomationService {
       }
     });
   }
+
 }
