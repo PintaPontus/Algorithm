@@ -62,9 +62,14 @@ export class AutomationService {
       previousItem.waited = undefined;
       previousItem.active = false;
     }
+
+    async function waitMs(time: number){
+      await new Promise(f => setTimeout(f, time));
+    }
+
     for(let i = 0; !this.stopped && this.actionsList.length > 0; i=(i+1)%this.actionsList.length){
       while(!this.executing && !this.stopped && this.actionsList.length > 0){
-        await new Promise(f => setTimeout(f, this.delay>100 ? this.delay : 100));
+        await waitMs(this.delay>100 ? this.delay : 100);
       }
 
       if(previousItem) {
@@ -86,11 +91,11 @@ export class AutomationService {
         case AutomationType.WAIT:
 
           if(actualItem.duration <= this.WAITING_STEP){
-            await new Promise(f => setTimeout(f, actualItem.duration));
+            await waitMs(actualItem.duration);
           }else{
             actualItem.waited = 0;
             while(actualItem.waited<actualItem.duration && this.executing && !this.stopped){
-              await new Promise(f => setTimeout(f, this.WAITING_STEP));
+              await waitMs(this.WAITING_STEP);
               actualItem.waited+=this.WAITING_STEP;
             }
           }
@@ -102,7 +107,7 @@ export class AutomationService {
           await this.tauriService.move(actualItem.position.x, actualItem.position.y);
           break;
       }
-      await new Promise(f => setTimeout(f, this.delay));
+      await waitMs(this.delay);
       previousItem = actualItem;
       deactivatePrevious(previousItem);
       if(i+1 === this.actionsList.length && !this.cycle){
@@ -166,7 +171,7 @@ export class AutomationService {
   async openActions(path: string){
     await this.tauriService.openFile(path).then(content => {
       if(content !== ""){
-        this.actionsList = JSON.parse(content);
+        this.import(content);
       }
     });
   }
