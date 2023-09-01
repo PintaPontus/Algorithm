@@ -1,3 +1,8 @@
+<div class="working-status" [ngClass]="{'active': controller.isWorking(), 'paused': controller.isPaused()}">
+  <span class="material-symbols-outlined">
+  settings
+  </span>
+</div>
 <div class="action-delay">
   DELAY:
   <select [(ngModel)]="controller.delay">
@@ -35,7 +40,9 @@
   <action-button (click)="controller.play()" [color]="'lime'"> play_arrow</action-button>
   <action-button (click)="controller.pause()">pause</action-button>
   <action-button (click)="controller.stop()" [color]="'red'">stop</action-button>
-  <action-button (click)="controller.add()" [color]="'lime'">add</action-button>
+  <action-button (click)="controller.cycle = !controller.cycle" [color]="'lime'">
+    {{controller.cycle ? 'sync' : 'sync_disabled'}}
+  </action-button>
 </div>
 <dialog class="import-dialog" [open]="importDialogOpen">
   <h2>Import</h2>

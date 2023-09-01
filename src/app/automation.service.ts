@@ -14,8 +14,10 @@ export class AutomationService {
   public actionsList: AutomationItem[] = [];
   private stopped: boolean = true;
   private executing: boolean = false;
+  public cycle: boolean = true;
   public delay: number = 100;
   private readonly SETTINGS_FILE_NAME: string = ".algorithm-actions.json";
+  private readonly WAITING_STEP: number = 50;
   public CURRENT_DIR: string = "";
   constructor(tauriService: TauriInteractionsService) {
     this.tauriService = tauriService;
@@ -56,20 +58,42 @@ export class AutomationService {
   async automation_loop(){
     let actualItem: AutomationItem;
     let previousItem: AutomationItem | undefined;
+    function deactivatePrevious(previousItem: AutomationItem){
+      previousItem.waited = undefined;
+      previousItem.active = false;
+    }
     for(let i = 0; !this.stopped && this.actionsList.length > 0; i=(i+1)%this.actionsList.length){
-      while(!this.executing){
-        await new Promise(f => setTimeout(f, this.delay>250 ? this.delay : 250));
+      while(!this.executing && !this.stopped && this.actionsList.length > 0){
+        await new Promise(f => setTimeout(f, this.delay>100 ? this.delay : 100));
       }
 
-      if(previousItem){
-        previousItem.active = false;
+      if(previousItem) {
+        deactivatePrevious(previousItem);
       }
+
+      if(this.actionsList.length === 0){
+        this.stopped = true;
+      }
+
+      if(this.stopped){
+        break;
+      }
+
       actualItem = this.actionsList[i];
       actualItem.active = true;
 
       switch (actualItem.type){
         case AutomationType.WAIT:
-          await new Promise(f => setTimeout(f, actualItem.duration));
+
+          if(actualItem.duration <= this.WAITING_STEP){
+            await new Promise(f => setTimeout(f, actualItem.duration));
+          }else{
+            actualItem.waited = 0;
+            while(actualItem.waited<actualItem.duration && this.executing && !this.stopped){
+              await new Promise(f => setTimeout(f, this.WAITING_STEP));
+              actualItem.waited+=this.WAITING_STEP;
+            }
+          }
           break;
         case AutomationType.CLICK_MOUSE:
           await this.tauriService.click();
@@ -78,19 +102,31 @@ export class AutomationService {
           await this.tauriService.move(actualItem.position.x, actualItem.position.y);
           break;
       }
-      previousItem = actualItem;
       await new Promise(f => setTimeout(f, this.delay));
+      previousItem = actualItem;
+      deactivatePrevious(previousItem);
+      if(i+1 === this.actionsList.length && !this.cycle){
+        this.stopped = true;
+      }
     }
-    if(previousItem){
-      previousItem.active = false;
-    }
+
+  }
+
+  isWorking(){
+    return this.executing && !this.stopped;
+  }
+
+  isPaused() {
+    return !this.executing && !this.stopped;
   }
 
   play() {
-    this.executing=true;
-    if(this.stopped){
-      this.stopped=false;
-      this.automation_loop();
+    if(this.actionsList.length > 0){
+      this.executing=true;
+      if(this.stopped){
+        this.stopped=false;
+        this.automation_loop();
+      }
     }
   }
 
@@ -134,5 +170,4 @@ export class AutomationService {
       }
     });
   }
-
 }

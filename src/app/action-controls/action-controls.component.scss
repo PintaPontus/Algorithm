@@ -5,8 +5,25 @@
   justify-content: center;
 }
 
+.working-status{
+  flex: 1;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.working-status.active{
+  color: green;
+  animation: spinning-anim 2s linear infinite;
+}
+
+.working-status.paused{
+  color: gold;
+}
+
 .action-delay{
-  flex: 5;
+  flex: 9;
   font-size: 1.5rem;
 }
 
@@ -17,7 +34,7 @@
 }
 
 .mouse-pos{
-  flex: 2;
+  flex: 4;
   font-size: 2rem;
   display: flex;
   align-items: center;
@@ -39,7 +56,7 @@
 }
 
 .action-buttons{
-  flex: 5;
+  flex: 10;
   height: 70%;
   display: flex;
   align-items: stretch;
@@ -111,6 +128,20 @@ dialog[open]>input{
 
 .dialog-actions>button:active{
   background-color: midnightblue;
+}
+
+@keyframes spinning-anim{
+  from {
+    color: green;
+  }
+  50%{
+    transform: rotate(180deg);
+    color: lime;
+  }
+  to{
+    transform: rotate(360deg);
+    color: green;
+  }
 }
 
 

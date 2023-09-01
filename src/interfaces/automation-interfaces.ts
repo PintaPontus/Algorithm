@@ -1,6 +1,7 @@
 export class AutomationItem {
   public type: AutomationType = AutomationType.WAIT;
   public duration: number = 1000;
+  public waited: number | undefined;
   public position: Position = new Position();
   public active: boolean = false;
 }

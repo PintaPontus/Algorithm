@@ -10,16 +10,19 @@ add
            [(ngModel)]="action.duration"
            type="number"
            step="1000"
+           maxlength=4
            placeholder="Duration (ms)">
     <input *ngIf="action.type === AutomationType.MOVE_MOUSE"
            [(ngModel)]="action.position.x"
            type="number"
            step="100"
+           maxlength=4
            placeholder="X">
     <input *ngIf="action.type === AutomationType.MOVE_MOUSE"
            [(ngModel)]="action.position.y"
            type="number"
            step="100"
+           maxlength=4
            placeholder="Y">
   </div>
   <div class="action-buttons">
