@@ -32,16 +32,25 @@
 }
 
 .action-description>*{
-  height: 3rem;
   box-sizing: border-box;
   font-size: 2rem;
-  background-color: dodgerblue;
-  border: 2px inset black;
-  width: 25%;
+  flex: 8;
+}
+
+.action-description>.typing-tooltip{
+  display: flex;
+  justify-content: center;
+  align-items: center;
   flex: 1;
+  cursor: default;
+  user-select: none;
 }
 
 .action-description>select, .action-description>input{
+  height: 3rem;
+  width: 25%;
+  background-color: dodgerblue;
+  border: 2px inset black;
   border-radius: 15px;
 }
 

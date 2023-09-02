@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/tauri';
-import {Position} from "../interfaces/automation-interfaces";
+import {MouseButton, Position} from "../interfaces/automation-interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -23,12 +23,24 @@ export class TauriInteractionsService {
     invoke('logging', {msg: String(msg)});
   }
 
-  public async click(){
-    await invoke('click');
+  public async click(button: MouseButton){
+    await invoke('click_mouse', {button: button});
   }
 
-  public async move(x: number, y: number){
+  public async moveTo(x: number, y: number){
     await invoke('move_mouse', {x: x, y: y});
+  }
+
+  public async scroll(amount: number){
+    await invoke('scroll_mouse', {amount: amount});
+  }
+
+  public async keyboardType(typing: string){
+    await invoke('keyboard_type', {typing: typing});
+  }
+
+  public async keyboardSequence(sequence: string){
+    await invoke('keyboard_sequence', {sequence: sequence});
   }
 
   async retrieveCoords() {

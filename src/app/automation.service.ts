@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {TauriInteractionsService} from "./tauri-interactions.service";
-import {AutomationItem, AutomationType} from "../interfaces/automation-interfaces";
+import {AutomationItem, AutomationType, MouseButton} from "../interfaces/automation-interfaces";
 import {appConfigDir} from "@tauri-apps/api/path";
 import {appWindow, LogicalSize} from "@tauri-apps/api/window";
 import {confirm} from "@tauri-apps/api/dialog";
@@ -100,11 +100,20 @@ export class AutomationService {
             }
           }
           break;
-        case AutomationType.CLICK_MOUSE:
-          await this.tauriService.click();
-          break;
         case AutomationType.MOVE_MOUSE:
-          await this.tauriService.move(actualItem.position.x, actualItem.position.y);
+          await this.tauriService.moveTo(actualItem.position.x, actualItem.position.y);
+          break;
+        case AutomationType.CLICK_MOUSE:
+          await this.tauriService.click(MouseButton.LEFT);
+          break;
+        case AutomationType.SCROLL_MOUSE:
+          await this.tauriService.scroll(actualItem.scrollAmount);
+          break;
+        case AutomationType.KEYBOARD_TYPE:
+          await this.tauriService.keyboardType(actualItem.keyboardTyping);
+          break;
+        case AutomationType.KEYBOARD_SEQUENCE:
+          await this.tauriService.keyboardSequence(actualItem.keyboardTyping);
           break;
       }
       await waitMs(this.delay);

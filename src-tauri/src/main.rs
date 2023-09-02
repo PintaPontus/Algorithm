@@ -11,8 +11,7 @@ use std::fs::OpenOptions;
 use std::path::Path;
 use std::io::{Read, Write};
 use std::os::windows::fs::{OpenOptionsExt};
-use mouse_rs::{Mouse};
-use mouse_rs::types::keys::Keys;
+use enigo::*;
 
 use tauri::{CustomMenuItem, SystemTray, SystemTrayMenu, SystemTrayMenuItem, SystemTrayEvent, Manager};
 
@@ -54,7 +53,8 @@ fn main() {
       _ => {}
     })
     .invoke_handler(tauri::generate_handler![
-      get_current_dir, save_file, open_file, logging, click, move_mouse, get_coords
+      get_current_dir, save_file, open_file, logging,
+      click_mouse, move_mouse, scroll_mouse, keyboard_type, keyboard_sequence, get_coords
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
@@ -117,21 +117,46 @@ fn logging(msg: String){
 }
 
 #[tauri::command]
-fn click() {
-  let mouse = Mouse::new();
-  mouse.click(&Keys::LEFT).expect("Unable to click with mouse");
+fn click_mouse(button: &str) {
+  let mut enigo = Enigo::new();
+  enigo.mouse_click(match button {
+    "Left" => {
+      MouseButton::Left
+    }
+    "Right" => {
+      MouseButton::Right
+    }
+    _ => {MouseButton::Left}
+  });
 }
 
 #[tauri::command]
 fn move_mouse(x: i32, y: i32) {
-  let mouse = Mouse::new();
-  mouse.move_to(x, y).expect("Unable to move mouse");
+  let mut enigo = Enigo::new();
+  enigo.mouse_move_to(x, y);
+}
+
+#[tauri::command]
+fn scroll_mouse(amount: i32) {
+  let mut enigo = Enigo::new();
+  enigo.mouse_scroll_y(amount);
+}
+
+#[tauri::command]
+fn keyboard_type(typing: &str) {
+  let mut enigo = Enigo::new();
+  enigo.key_sequence(typing);
+}
+
+#[tauri::command]
+fn keyboard_sequence(sequence: &str) {
+  let mut enigo = Enigo::new();
+  enigo.key_sequence_parse(sequence);
 }
 
 #[tauri::command]
 fn get_coords() -> Coords {
-  let mouse = Mouse::new();
-  let coords = Coords::new(mouse.get_position().expect("Unable to get mouse position"));
-  return coords;
+  let enigo = Enigo::new();
+  return Coords::new(enigo.mouse_location());
 }
 

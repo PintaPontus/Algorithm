@@ -4,7 +4,9 @@ add
 <ng-template [ngIf]="action">
   <div class="action-description">
     <select [(ngModel)]="action.type">
-      <option *ngFor="let type of Object.values(AutomationType); index as i" [value]="type" [selected]="i === 2">{{type}}</option>
+      <option *ngFor="let type of Object.values(AutomationType); index as i"
+              [value]="type"
+              [selected]="i === 2">{{type}}</option>
     </select>
     <input *ngIf="action.type === AutomationType.WAIT"
            [(ngModel)]="action.duration"
@@ -24,6 +26,27 @@ add
            step="100"
            maxlength=4
            placeholder="Y">
+    <select *ngIf="action.type === AutomationType.CLICK_MOUSE" [(ngModel)]="action.mouseButton">
+      <option *ngFor="let mouseButton of Object.values(MouseButton); index as i"
+              [value]="mouseButton"
+              [selected]="i === 0">{{mouseButton}}</option>
+    </select>
+    <input *ngIf="action.type === AutomationType.SCROLL_MOUSE"
+           [(ngModel)]="action.scrollAmount"
+           type="number"
+           step="100"
+           maxlength=4
+           placeholder="Amount">
+    <input *ngIf="action.type === AutomationType.KEYBOARD_TYPE || action.type === AutomationType.KEYBOARD_SEQUENCE"
+           [(ngModel)]="action.keyboardTyping"
+           type="text"
+           placeholder="Text">
+    <span *ngIf="action.type === AutomationType.KEYBOARD_TYPE"
+          class="material-symbols-outlined typing-tooltip"
+          title="This will simulate a keyboard typing. This includes unicode characters such as 😀">info</span>
+    <span *ngIf="action.type === AutomationType.KEYBOARD_SEQUENCE"
+          class="material-symbols-outlined typing-tooltip"
+          title="This will simulate a keyboard char sequence. Specify a key_down/key_up/key_click with {KEY} (&quot;{+SHIFT}hello{-SHIFT}&quot;)">info</span>
   </div>
   <div class="action-buttons">
     <div class="arrow-buttons">

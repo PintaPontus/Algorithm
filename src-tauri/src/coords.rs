@@ -1,4 +1,3 @@
-use mouse_rs::types::Point;
 use serde::ser::SerializeStruct;
 use serde::{Serializer};
 
@@ -7,10 +6,10 @@ pub struct Coords {
   pub y: i32,
 }
 impl Coords{
-  pub fn new(p: Point) -> Self{
+  pub fn new(coords: (i32, i32)) -> Self{
     return Coords{
-      x: p.x,
-      y: p.y
+      x: coords.0,
+      y: coords.1
     };
   }
 }
