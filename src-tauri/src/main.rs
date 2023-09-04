@@ -87,7 +87,7 @@ fn save_file(path: String, content: String, hidden: bool){
   }
 
   let mut binding = OpenOptions::new();
-  let open_options = binding.write(true).create(true);
+  let open_options = binding.write(true).create(true).truncate(true);
 
   if hidden {
     open_options.attributes(FILE_ATTRIBUTE_HIDDEN);
