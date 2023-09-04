@@ -2,20 +2,14 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod coords;
+mod persistence;
 
 use coords::Coords;
 
-use std::env;
-use std::fs::{create_dir_all, File};
-use std::fs::OpenOptions;
-use std::path::Path;
-use std::io::{Read, Write};
-use std::os::windows::fs::{OpenOptionsExt};
 use enigo::*;
+use persistence::*;
 
 use tauri::{CustomMenuItem, SystemTray, SystemTrayMenu, SystemTrayMenuItem, SystemTrayEvent, Manager};
-
-const FILE_ATTRIBUTE_HIDDEN: u32 = 2;
 
 fn main() {
   let quit = CustomMenuItem::new("quit".to_string(), "Quit");
@@ -60,56 +54,7 @@ fn main() {
     .expect("error while running tauri application");
 }
 
-#[tauri::command]
-fn get_current_dir() -> String {
-  return env::current_dir()
-    .expect("Unable to retrieve current dir")
-    .as_path()
-    .to_str()
-    .expect("No current dir")
-    .to_string();
-}
 
-#[tauri::command]
-fn save_file(path: String, content: String, hidden: bool){
-
-  match path.rfind('\\') {
-    Some(slash_index) => {
-      let file_dir = (&path[..slash_index]).to_string();
-
-      let path_to_file_dir = Path::new(&file_dir);
-
-      if !path_to_file_dir.exists() {
-        create_dir_all(&file_dir).expect("Unable to create missing dir");
-      }
-    }
-    None => {}
-  }
-
-  let mut binding = OpenOptions::new();
-  let open_options = binding.write(true).create(true).truncate(true);
-
-  if hidden {
-    open_options.attributes(FILE_ATTRIBUTE_HIDDEN);
-  }
-
-  let mut file = open_options.open(path).expect("Unable to use file");
-
-  file.write_all(content.as_ref()).expect("Unable to write file");
-}
-
-#[tauri::command]
-fn open_file(path: String) -> String {
-  let mut contents = String::new();
-  let file = File::open(&path);
-  match file {
-    Ok(mut f) => {
-      f.read_to_string(&mut contents).expect("Unable to read file");
-    }
-    Err(_) => {}
-  }
-  return contents;
-}
 
 #[tauri::command]
 fn logging(msg: String){
