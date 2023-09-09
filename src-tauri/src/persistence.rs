@@ -1,10 +1,17 @@
+#[cfg(target_os = "windows")]
 use std::os::windows::fs::OpenOptionsExt;
 use std::env;
 use std::fs::{create_dir_all, File, OpenOptions};
 use std::path::Path;
 use std::io::{Read, Write};
 
+#[cfg(target_os = "windows")]
 const WINDOWS_FILE_ATTRIBUTE_HIDDEN: u32 = 2;
+
+#[cfg(target_os = "windows")]
+const DIR_SEPARATOR: char = '\\';
+#[cfg(any(target_os = "macos", target_os = "linux"))]
+const DIR_SEPARATOR: char = '/';
 
 #[tauri::command]
 pub fn get_current_dir() -> String {
@@ -19,7 +26,7 @@ pub fn get_current_dir() -> String {
 #[tauri::command]
 pub fn save_file(path: String, content: String, hidden: bool){
 
-  match path.rfind('\\') {
+  match path.rfind(DIR_SEPARATOR) {
     Some(slash_index) => {
       let file_dir = (&path[..slash_index]).to_string();
 
@@ -71,9 +78,19 @@ pub fn retrieve_file(path: String, hidden: bool) -> File{
 }
 
 #[cfg(target_os = "macos")]
-pub fn retrieve_file(path: String, hidden: bool) -> File{
+pub fn retrieve_file(mut path: String, hidden: bool) -> File{
   let mut binding = OpenOptions::new();
   let open_options = binding.write(true).create(true).truncate(true);
+
+  if hidden {
+    let index = match path.rfind(DIR_SEPARATOR) {
+      Some(slash_index) => slash_index + 1,
+      None => 0
+    };
+    if path.len() > index && char::from_u32(path.as_bytes()[index] as u32).unwrap() != '.'{
+      path.insert(index, '.');
+    }
+  }
 
   return open_options.open(path).expect("Unable to use file");
 }

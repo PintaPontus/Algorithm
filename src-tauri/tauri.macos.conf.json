@@ -1,0 +1,8 @@
+{
+  "build": {
+    "beforeBuildCommand": "bun run build",
+    "beforeDevCommand": "bun run start",
+    "devPath": "http://localhost:4200",
+    "distDir": "../dist/algorithm"
+  }
+}
