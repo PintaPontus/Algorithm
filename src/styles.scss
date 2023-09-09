@@ -9,6 +9,9 @@ html, body{
 *{
   font-family: 'Roboto', sans-serif;
 }
+select{
+  -webkit-appearance:none;
+}
 
 .click-me{
   cursor: pointer;
