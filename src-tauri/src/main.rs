@@ -14,23 +14,26 @@ use tauri::{
 };
 
 fn main() {
-    let quit = CustomMenuItem::new("quit".to_string(), "Quit");
-    let show = CustomMenuItem::new("show".to_string(), "Show");
-    let tray_menu = SystemTrayMenu::new()
-        .add_item(quit)
-        .add_native_item(SystemTrayMenuItem::Separator)
-        .add_item(show);
-
     tauri::Builder::default()
-        .system_tray(SystemTray::new().with_menu(tray_menu))
+        .system_tray(
+            SystemTray::new().with_menu(
+                SystemTrayMenu::new()
+                    .add_item(CustomMenuItem::new("show".to_string(), "Show"))
+                    .add_native_item(SystemTrayMenuItem::Separator)
+                    .add_item(CustomMenuItem::new("quit".to_string(), "Quit")),
+            ),
+        )
         .on_system_tray_event(|app, event| match event {
             SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
-                "quit" => {
-                    std::process::exit(0);
-                }
                 "show" => {
-                    let window = app.get_window("main").unwrap();
-                    window.show().unwrap();
+                    let window = app.get_window("main").expect("Unable to retrieve window");
+                    window.show().expect("Unable to show window");
+                    window.set_focus().expect("Unable to focus window");
+                }
+                "quit" => {
+                    if app.emit_all("tauri://close-requested", ()).is_err() {
+                        app.exit(0);
+                    }
                 }
                 _ => {}
             },
@@ -59,8 +62,7 @@ fn logging(msg: String) {
 
 #[tauri::command]
 fn click_mouse(button: &str) {
-    let mut enigo = Enigo::new();
-    enigo.mouse_click(match button {
+    Enigo::new().mouse_click(match button {
         "Left" => MouseButton::Left,
         "Right" => MouseButton::Right,
         _ => MouseButton::Left,
@@ -69,30 +71,25 @@ fn click_mouse(button: &str) {
 
 #[tauri::command]
 fn move_mouse(x: i32, y: i32) {
-    let mut enigo = Enigo::new();
-    enigo.mouse_move_to(x, y);
+    Enigo::new().mouse_move_to(x, y);
 }
 
 #[tauri::command]
 fn scroll_mouse(amount: i32) {
-    let mut enigo = Enigo::new();
-    enigo.mouse_scroll_y(amount);
+    Enigo::new().mouse_scroll_y(amount);
 }
 
 #[tauri::command]
 fn keyboard_type(typing: &str) {
-    let mut enigo = Enigo::new();
-    enigo.key_sequence(typing);
+    Enigo::new().key_sequence(typing);
 }
 
 #[tauri::command]
 fn keyboard_sequence(sequence: &str) {
-    let mut enigo = Enigo::new();
-    enigo.key_sequence_parse(sequence);
+    Enigo::new().key_sequence_parse(sequence);
 }
 
 #[tauri::command]
 fn get_coords() -> Coords {
-    let enigo = Enigo::new();
-    return Coords::new(enigo.mouse_location());
+    return Coords::new(Enigo::new().mouse_location());
 }
