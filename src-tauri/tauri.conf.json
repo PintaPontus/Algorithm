@@ -59,7 +59,9 @@
     },
     "systemTray": {
       "iconPath": "icons/icon.png",
-      "iconAsTemplate": true
+      "iconAsTemplate": true,
+      "menuOnLeftClick": true,
+      "title": "Algorithm"
     },
     "security": {
       "csp": null

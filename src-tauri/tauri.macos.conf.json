@@ -4,5 +4,11 @@
     "beforeDevCommand": "bun run start",
     "devPath": "http://localhost:4200",
     "distDir": "../dist/algorithm"
+  },
+  "tauri": {
+    "systemTray": {
+      "iconPath": "icons/macos_sys_tray_icon.png",
+      "iconAsTemplate": true
+    }
   }
 }
