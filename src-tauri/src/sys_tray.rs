@@ -1,26 +1,26 @@
 use std::str::FromStr;
 
-pub enum AlgorithmTrayAction{
+pub enum AlgorithmTrayAction {
     Play,
     Pause,
     Stop,
     Show,
-    Quit
+    Quit,
 }
 
 impl Into<String> for AlgorithmTrayAction {
     fn into(self) -> String {
         match self {
-            AlgorithmTrayAction::Play => {"Play".to_string()}
-            AlgorithmTrayAction::Pause => {"Pause".to_string()}
-            AlgorithmTrayAction::Stop => {"Stop".to_string()}
-            AlgorithmTrayAction::Show => {"Show".to_string()}
-            AlgorithmTrayAction::Quit => {"Quit".to_string()}
+            AlgorithmTrayAction::Play => "Play".to_string(),
+            AlgorithmTrayAction::Pause => "Pause".to_string(),
+            AlgorithmTrayAction::Stop => "Stop".to_string(),
+            AlgorithmTrayAction::Show => "Show".to_string(),
+            AlgorithmTrayAction::Quit => "Quit".to_string(),
         }
     }
 }
 
-impl FromStr for AlgorithmTrayAction{
+impl FromStr for AlgorithmTrayAction {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
@@ -29,7 +29,7 @@ impl FromStr for AlgorithmTrayAction{
             "Stop" => Ok(AlgorithmTrayAction::Stop),
             "Show" => Ok(AlgorithmTrayAction::Show),
             "Quit" => Ok(AlgorithmTrayAction::Quit),
-            _ => Err(format!("{} doesn't exist", s))
+            _ => Err(format!("{} doesn't exist", s)),
         }
     }
 }

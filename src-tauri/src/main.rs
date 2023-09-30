@@ -5,8 +5,8 @@ mod coords;
 mod persistence;
 mod sys_tray;
 
-use std::str::FromStr;
 use coords::Coords;
+use std::str::FromStr;
 use sys_tray::AlgorithmTrayAction;
 
 use enigo::*;
@@ -21,18 +21,34 @@ fn main() {
         .system_tray(
             SystemTray::new().with_menu(
                 SystemTrayMenu::new()
-                    .add_item(CustomMenuItem::new(AlgorithmTrayAction::Play, AlgorithmTrayAction::Play))
-                    .add_item(CustomMenuItem::new(AlgorithmTrayAction::Pause, AlgorithmTrayAction::Pause))
-                    .add_item(CustomMenuItem::new(AlgorithmTrayAction::Stop, AlgorithmTrayAction::Stop))
+                    .add_item(CustomMenuItem::new(
+                        AlgorithmTrayAction::Play,
+                        AlgorithmTrayAction::Play,
+                    ))
+                    .add_item(CustomMenuItem::new(
+                        AlgorithmTrayAction::Pause,
+                        AlgorithmTrayAction::Pause,
+                    ))
+                    .add_item(CustomMenuItem::new(
+                        AlgorithmTrayAction::Stop,
+                        AlgorithmTrayAction::Stop,
+                    ))
                     .add_native_item(SystemTrayMenuItem::Separator)
-                    .add_item(CustomMenuItem::new(AlgorithmTrayAction::Show, AlgorithmTrayAction::Show))
-                    .add_item(CustomMenuItem::new(AlgorithmTrayAction::Quit, AlgorithmTrayAction::Quit)),
+                    .add_item(CustomMenuItem::new(
+                        AlgorithmTrayAction::Show,
+                        AlgorithmTrayAction::Show,
+                    ))
+                    .add_item(CustomMenuItem::new(
+                        AlgorithmTrayAction::Quit,
+                        AlgorithmTrayAction::Quit,
+                    )),
             ),
         )
         .on_system_tray_event(|app, event| match event {
-            SystemTrayEvent::MenuItemClick { id, .. } =>
+            SystemTrayEvent::MenuItemClick { id, .. } => {
                 match AlgorithmTrayAction::from_str(id.as_str())
-                    .unwrap_or(AlgorithmTrayAction::Show) {
+                    .unwrap_or(AlgorithmTrayAction::Show)
+                {
                     AlgorithmTrayAction::Play => {
                         app.emit_all("algo://play-request", ()).unwrap_or(());
                     }
@@ -52,7 +68,8 @@ fn main() {
                             app.exit(0);
                         }
                     }
-                },
+                }
+            }
             _ => {}
         })
         .invoke_handler(tauri::generate_handler![
