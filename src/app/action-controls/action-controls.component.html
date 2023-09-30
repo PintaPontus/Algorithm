@@ -3,9 +3,14 @@
   settings
   </span>
 </div>
+<div class="timer-status" [ngClass]="{'start': controller.isWaitingStart(), 'stop': controller.isWaitingStop()}">
+  <span class="material-symbols-outlined">
+  timer
+  </span>
+</div>
 <div class="action-delay">
   DELAY:
-  <select [(ngModel)]="controller.delay">
+  <select [(ngModel)]="controller.actionsDelay">
     <option [value]="0">None</option>
     <option [value]="25">25ms</option>
     <option [value]="50">50ms</option>
@@ -33,30 +38,23 @@
   </div>
 </div>
 <div class="action-buttons">
-  <action-button (click)="openImportDialog()">download</action-button>
-  <action-button (click)="openExportDialog()">upload</action-button>
   <action-button (click)="saveActions()">save</action-button>
   <action-button (click)="openActions()">folder_open</action-button>
+  <action-button (click)="openTimer()" [color]="'gold'">timer</action-button>
   <action-button (click)="controller.play()" [color]="'lime'"> play_arrow</action-button>
   <action-button (click)="controller.pause()">pause</action-button>
   <action-button (click)="controller.stop()" [color]="'red'">stop</action-button>
-  <action-button (click)="controller.cycle = !controller.cycle" [color]="'lime'">
-    {{controller.cycle ? 'sync' : 'sync_disabled'}}
+  <action-button (click)="controller.cycleActions = !controller.cycleActions" [color]="'lime'">
+    {{controller.cycleActions ? 'sync' : 'sync_disabled'}}
   </action-button>
 </div>
-<dialog class="import-dialog" [open]="importDialogOpen">
-  <h2>Import</h2>
-  <textarea class="import-textarea" [(ngModel)]="importText"></textarea>
+<dialog [open]="showTimer">
+  <h2>Start</h2>
+  <input type="datetime-local" step="1" [min]="minDate" [(ngModel)]="startTime">
+  <h2>Stop</h2>
+  <input type="datetime-local" step="1" [min]="minDate" [(ngModel)]="stopTime">
   <div class="dialog-actions">
-    <button (click)="importActions()">Import</button>
-    <button (click)="closeDialogs()">Close</button>
-  </div>
-</dialog>
-<dialog class="export-dialog" [open]="exportDialogOpen">
-  <h2>Export</h2>
-  <textarea class="export-textarea" [(ngModel)]="exportText"></textarea>
-  <div class="dialog-actions">
-    <button (click)="copyActions()">Copy</button>
-    <button (click)="closeDialogs()">Close</button>
+    <button (click)="setTimer()">Set</button>
+    <button (click)="closeTimerDialog()">Close</button>
   </div>
 </dialog>

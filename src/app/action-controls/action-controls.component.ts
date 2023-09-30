@@ -14,26 +14,14 @@ export class ActionControlsComponent {
   public tauriService: TauriInteractionsService;
   @Input()
   public actualMouseCoords: Position = new Position();
-  public importDialogOpen: boolean = false;
-  public exportDialogOpen: boolean = false;
-  public importText: string = '';
-  public exportText: string = '';
+  public showTimer: boolean = false;
+  public startTime: string | undefined;
+  public stopTime: string | undefined;
+  public minDate: string | undefined;
 
   constructor(controller: AutomationService,tauriService: TauriInteractionsService) {
     this.tauriService = tauriService;
     this.controller = controller;
-  }
-
-  importActions(){
-    this.controller.import(this.importText);
-    this.closeDialogs();
-  }
-
-  copyActions(){
-    navigator.clipboard.writeText(this.exportText)
-      .then(()=>{
-        this.closeDialogs();
-      })
   }
 
   async saveActions(){
@@ -63,20 +51,23 @@ export class ActionControlsComponent {
     }
   }
 
-  openImportDialog() {
-    this.closeDialogs();
-    this.importText = '';
-    this.importDialogOpen = true;
+  openTimer() {
+    this.minDate = new Date().toISOString();
+    this.minDate = this.minDate.substring(0, this.minDate.indexOf('.'));
+    this.tauriService.log_rust(this.minDate);
+    this.showTimer = true;
   }
 
-  openExportDialog() {
-    this.closeDialogs();
-    this.exportText = this.controller.export() || '';
-    this.exportDialogOpen = true;
+  closeTimerDialog() {
+    this.showTimer = false;
+    this.stopTime = undefined;
+    this.startTime = undefined;
   }
 
-  closeDialogs() {
-    this.importDialogOpen = false;
-    this.exportDialogOpen = false;
+  setTimer() {
+    this.controller.setStartTimer(this.startTime ? new Date(String(this.startTime)) : undefined);
+    this.controller.setStopTimer(this.stopTime ? new Date(String(this.stopTime)) : undefined);
+    this.closeTimerDialog();
   }
+
 }

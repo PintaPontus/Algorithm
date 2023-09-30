@@ -14,11 +14,13 @@ export class AutomationService {
     public actionsList: AutomationItem[] = [];
     private stopped: boolean = true;
     private executing: boolean = false;
-    public cycle: boolean = true;
-    public delay: number = 100;
+  public cycleActions: boolean = true;
+  public actionsDelay: number = 100;
     private readonly SETTINGS_FILE_NAME: string = ".algorithm-actions.json";
     private readonly WAITING_STEP: number = 50;
     public CURRENT_DIR: string = "";
+  private startTimeout: number | undefined;
+  private stopTimeout: number | undefined;
 
     constructor(tauriService: TauriInteractionsService) {
         this.tauriService = tauriService;
@@ -78,7 +80,7 @@ export class AutomationService {
 
         for (let i = 0; !this.stopped && this.actionsList.length > 0; i = (i + 1) % this.actionsList.length) {
             while (!this.executing && !this.stopped && this.actionsList.length > 0) {
-                await waitMs(this.delay > 100 ? this.delay : 100);
+              await waitMs(this.actionsDelay > 100 ? this.actionsDelay : 100);
             }
 
             if (previousItem) {
@@ -125,10 +127,10 @@ export class AutomationService {
                     await this.tauriService.keyboardSequence(actualItem.keyboardTyping);
                     break;
             }
-            await waitMs(this.delay);
+          await waitMs(this.actionsDelay);
             previousItem = actualItem;
             deactivatePrevious(previousItem);
-            if (i + 1 === this.actionsList.length && !this.cycle) {
+          if (i + 1 === this.actionsList.length && !this.cycleActions) {
                 this.stopped = true;
             }
         }
@@ -144,13 +146,14 @@ export class AutomationService {
     }
 
     play() {
-        if (this.actionsList.length > 0) {
-            this.executing = true;
-            if (this.stopped) {
-                this.stopped = false;
-                this.automation_loop();
-            }
+      this.clearStartTimeout();
+      if (this.actionsList.length > 0) {
+        this.executing = true;
+        if (this.stopped) {
+          this.stopped = false;
+          this.automation_loop();
         }
+      }
     }
 
     pause() {
@@ -158,8 +161,9 @@ export class AutomationService {
     }
 
     stop() {
-        this.stopped = true;
-        this.executing = false;
+      this.clearStopTimeout();
+      this.stopped = true;
+      this.executing = false;
     }
 
     add() {
@@ -194,4 +198,60 @@ export class AutomationService {
             }
         });
     }
+
+  isWaitingStart() {
+    return Boolean(this.startTimeout);
+  }
+
+  isWaitingStop() {
+    return Boolean(this.stopTimeout);
+  }
+
+  setStartTimer(date: Date | undefined) {
+    this.tauriService.log_rust(`SETTING START TIMER ${date}`);
+    this.tauriService.log_rust(`${date ? this.getTiming(date) : "NONE"}`);
+    this.clearStartTimeout();
+
+    if (date) {
+      let timing = this.getTiming(date);
+      if (timing > 0) {
+        this.startTimeout = setTimeout(
+          () => this.play(),
+          timing
+        );
+      } else {
+        this.play();
+      }
+    }
+  }
+
+  setStopTimer(date: Date | undefined) {
+    this.clearStopTimeout();
+
+    if (date) {
+      let timing = this.getTiming(date);
+      if (timing > 0) {
+        this.stopTimeout = setTimeout(
+          () => this.stop(),
+          timing
+        );
+      } else {
+        this.stop();
+      }
+    }
+  }
+
+  getTiming(date: Date) {
+    return (date.getTime()) - (new Date().getTime());
+  }
+
+  clearStartTimeout() {
+    clearTimeout(this.startTimeout);
+    this.startTimeout = undefined;
+  }
+
+  clearStopTimeout() {
+    clearTimeout(this.stopTimeout);
+    this.stopTimeout = undefined;
+  }
 }

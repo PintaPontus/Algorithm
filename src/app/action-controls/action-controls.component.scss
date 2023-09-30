@@ -11,10 +11,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  color: grey;
 }
 
 .working-status.active{
-  color: green;
+  color: lime;
   animation: spinning-anim 2s linear infinite;
 }
 
@@ -22,9 +23,31 @@
   color: gold;
 }
 
-.action-delay{
-  flex: 9;
+.timer-status {
+  flex: 1;
   font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: grey;
+}
+
+.timer-status.stop {
+  color: red;
+}
+
+.timer-status.start {
+  color: lime;
+}
+
+.action-delay{
+  flex: 8;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  margin-left: 30px;
+  gap: 10px;
 }
 
 .action-delay>select{
@@ -92,18 +115,12 @@ dialog[open]>h2{
   text-transform: uppercase;
 }
 
-dialog[open]>textarea{
-  border-radius: 10px;
-  resize: none;
-  width: 30vw;
-  height: 30vh;
-}
-
 dialog[open]>input{
   border-radius: 10px;
   resize: none;
   width: 100%;
   font-size: 1.5rem;
+  margin-bottom: 5vh;
 }
 
 .dialog-actions{
@@ -133,15 +150,12 @@ dialog[open]>input{
 
 @keyframes spinning-anim{
   from {
-    color: green;
   }
   50%{
     transform: rotate(180deg);
-    color: lime;
   }
   to{
     transform: rotate(360deg);
-    color: green;
   }
 }
 
