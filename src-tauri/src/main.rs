@@ -5,13 +5,13 @@ mod coords;
 mod persistence;
 mod sys_tray;
 
-use coords::Coords;
 use std::str::FromStr;
+
+use coords::Coords;
+use persistence::*;
 use sys_tray::AlgorithmTrayAction;
 
 use enigo::*;
-use persistence::*;
-
 use tauri::{
     CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem,
 };
