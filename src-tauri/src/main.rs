@@ -3,8 +3,11 @@
 
 mod coords;
 mod persistence;
+mod sys_tray;
 
+use std::str::FromStr;
 use coords::Coords;
+use sys_tray::AlgorithmTrayAction;
 
 use enigo::*;
 use persistence::*;
@@ -18,25 +21,38 @@ fn main() {
         .system_tray(
             SystemTray::new().with_menu(
                 SystemTrayMenu::new()
-                    .add_item(CustomMenuItem::new("show".to_string(), "Show"))
+                    .add_item(CustomMenuItem::new(AlgorithmTrayAction::Play, AlgorithmTrayAction::Play))
+                    .add_item(CustomMenuItem::new(AlgorithmTrayAction::Pause, AlgorithmTrayAction::Pause))
+                    .add_item(CustomMenuItem::new(AlgorithmTrayAction::Stop, AlgorithmTrayAction::Stop))
                     .add_native_item(SystemTrayMenuItem::Separator)
-                    .add_item(CustomMenuItem::new("quit".to_string(), "Quit")),
+                    .add_item(CustomMenuItem::new(AlgorithmTrayAction::Show, AlgorithmTrayAction::Show))
+                    .add_item(CustomMenuItem::new(AlgorithmTrayAction::Quit, AlgorithmTrayAction::Quit)),
             ),
         )
         .on_system_tray_event(|app, event| match event {
-            SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
-                "show" => {
-                    let window = app.get_window("main").expect("Unable to retrieve window");
-                    window.show().expect("Unable to show window");
-                    window.set_focus().expect("Unable to focus window");
-                }
-                "quit" => {
-                    if app.emit_all("tauri://close-requested", ()).is_err() {
-                        app.exit(0);
+            SystemTrayEvent::MenuItemClick { id, .. } =>
+                match AlgorithmTrayAction::from_str(id.as_str())
+                    .unwrap_or(AlgorithmTrayAction::Show) {
+                    AlgorithmTrayAction::Play => {
+                        app.emit_all("algo://play-request", ()).unwrap_or(());
                     }
-                }
-                _ => {}
-            },
+                    AlgorithmTrayAction::Pause => {
+                        app.emit_all("algo://pause-request", ()).unwrap_or(());
+                    }
+                    AlgorithmTrayAction::Stop => {
+                        app.emit_all("algo://stop-request", ()).unwrap_or(());
+                    }
+                    AlgorithmTrayAction::Show => {
+                        let window = app.get_window("main").expect("Unable to retrieve window");
+                        window.show().expect("Unable to show window");
+                        window.set_focus().expect("Unable to focus window");
+                    }
+                    AlgorithmTrayAction::Quit => {
+                        if app.emit_all("tauri://close-requested", ()).is_err() {
+                            app.exit(0);
+                        }
+                    }
+                },
             _ => {}
         })
         .invoke_handler(tauri::generate_handler![

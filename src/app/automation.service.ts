@@ -30,6 +30,9 @@ export class AutomationService {
     private initWindow() {
         Promise.allSettled([
             appWindow.setMinSize(new LogicalSize(1200, 600)),
+            appWindow.listen("algo://play-request", async () => this.play()),
+            appWindow.listen("algo://pause-request", async () => this.pause()),
+            appWindow.listen("algo://stop-request", async () => this.stop()),
             appWindow.listen("tauri://close-requested", async () => {
                 if (!await appWindow.isVisible()) {
                     await this.saveAndClose();
