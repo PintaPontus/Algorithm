@@ -1,26 +1,26 @@
-:host{
-  height: 100%;
-  aspect-ratio: 1/1;
-  border: 3px outset dodgerblue;
-  border-radius: 15px;
-  background-color: dodgerblue;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 50px;
-  cursor: pointer;
-  user-select: none;
+:host {
+    height: 100%;
+    aspect-ratio: 1/1;
+    border: 3px outset dodgerblue;
+    border-radius: 15px;
+    background-color: dodgerblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 50px;
+    cursor: pointer;
+    user-select: none;
 }
 
-.material-symbols-outlined{
-  color: black;
+.material-symbols-outlined {
+    color: black;
 }
 
-:host:hover{
-  opacity: 0.8;
-  border-color: white;
+:host:hover {
+    opacity: 0.8;
+    border-color: white;
 }
 
-:host:active{
-  opacity: 0.6;
+:host:active {
+    opacity: 0.6;
 }

@@ -1,12 +1,13 @@
-:host{
-  display: flex;
-  height: 100vh;
-  width: 100vw;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
+:host {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
-*{
-  color: white;
-  overflow: hidden;
+
+* {
+    color: white;
+    overflow: hidden;
 }

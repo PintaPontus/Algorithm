@@ -1,16 +1,16 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { TauriInteractionsService } from './tauri-interactions.service';
+import {TauriInteractionsService} from './tauri-interactions.service';
 
 describe('TauriInteractionsService', () => {
-  let service: TauriInteractionsService;
+    let service: TauriInteractionsService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(TauriInteractionsService);
-  });
+    beforeEach(() => {
+        TestBed.configureTestingModule({});
+        service = TestBed.inject(TauriInteractionsService);
+    });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+    it('should be created', () => {
+        expect(service).toBeTruthy();
+    });
 });

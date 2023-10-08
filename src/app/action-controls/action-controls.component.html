@@ -9,52 +9,52 @@
   </span>
 </div>
 <div class="action-delay">
-  DELAY:
-  <select [(ngModel)]="controller.actionsDelay">
-    <option [value]="0">None</option>
-    <option [value]="25">25ms</option>
-    <option [value]="50">50ms</option>
-    <option [value]="100">100ms</option>
-    <option [value]="250">250ms</option>
-    <option [value]="500">500ms</option>
-    <option [value]="1000">1000ms</option>
-  </select>
+    DELAY:
+    <select [(ngModel)]="controller.actionsDelay">
+        <option [value]="0">None</option>
+        <option [value]="25">25ms</option>
+        <option [value]="50">50ms</option>
+        <option [value]="100">100ms</option>
+        <option [value]="250">250ms</option>
+        <option [value]="500">500ms</option>
+        <option [value]="1000">1000ms</option>
+    </select>
 </div>
 <div class="mouse-pos">
-  <div class="mouse-separator">
-    [
-  </div>
-  <div class="mouse-x">
-    {{actualMouseCoords.x}}
-  </div>
-  <div class="mouse-separator">
-    :
-  </div>
-  <div class="mouse-y">
-    {{actualMouseCoords.y}}
-  </div>
-  <div class="mouse-separator">
-    ]
-  </div>
+    <div class="mouse-separator">
+        [
+    </div>
+    <div class="mouse-x">
+        {{actualMouseCoords.x}}
+    </div>
+    <div class="mouse-separator">
+        :
+    </div>
+    <div class="mouse-y">
+        {{actualMouseCoords.y}}
+    </div>
+    <div class="mouse-separator">
+        ]
+    </div>
 </div>
 <div class="action-buttons">
-  <action-button (click)="saveActions()">save</action-button>
-  <action-button (click)="openActions()">folder_open</action-button>
-  <action-button (click)="openTimer()" [color]="'gold'">timer</action-button>
-  <action-button (click)="controller.play()" [color]="'lime'"> play_arrow</action-button>
-  <action-button (click)="controller.pause()">pause</action-button>
-  <action-button (click)="controller.stop()" [color]="'red'">stop</action-button>
-  <action-button (click)="controller.cycleActions = !controller.cycleActions" [color]="'lime'">
-    {{controller.cycleActions ? 'sync' : 'sync_disabled'}}
-  </action-button>
+    <action-button (click)="saveActions()">save</action-button>
+    <action-button (click)="openActions()">folder_open</action-button>
+    <action-button (click)="openTimer()" [color]="'gold'">timer</action-button>
+    <action-button (click)="controller.play()" [color]="'lime'"> play_arrow</action-button>
+    <action-button (click)="controller.pause()">pause</action-button>
+    <action-button (click)="controller.stop()" [color]="'red'">stop</action-button>
+    <action-button (click)="controller.cycleActions = !controller.cycleActions" [color]="'lime'">
+        {{controller.cycleActions ? 'sync' : 'sync_disabled'}}
+    </action-button>
 </div>
 <dialog [open]="showTimer">
-  <h2>Start</h2>
-  <input type="datetime-local" step="1" [min]="minDate" [(ngModel)]="startTime">
-  <h2>Stop</h2>
-  <input type="datetime-local" step="1" [min]="minDate" [(ngModel)]="stopTime">
-  <div class="dialog-actions">
-    <button (click)="setTimer()">Set</button>
-    <button (click)="closeTimerDialog()">Close</button>
-  </div>
+    <h2>Start</h2>
+    <input type="datetime-local" step="1" [min]="minDate" [(ngModel)]="startTime">
+    <h2>Stop</h2>
+    <input type="datetime-local" step="1" [min]="minDate" [(ngModel)]="stopTime">
+    <div class="dialog-actions">
+        <button (click)="setTimer()">Set</button>
+        <button (click)="closeTimerDialog()">Close</button>
+    </div>
 </dialog>

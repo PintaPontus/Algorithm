@@ -1,162 +1,162 @@
-:host{
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
+:host {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
 }
 
-.working-status{
-  flex: 1;
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: grey;
+.working-status {
+    flex: 1;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: grey;
 }
 
-.working-status.active{
-  color: lime;
-  animation: spinning-anim 2s linear infinite;
+.working-status.active {
+    color: lime;
+    animation: spinning-anim 2s linear infinite;
 }
 
-.working-status.paused{
-  color: gold;
+.working-status.paused {
+    color: gold;
 }
 
 .timer-status {
-  flex: 1;
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: grey;
+    flex: 1;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: grey;
 }
 
 .timer-status.stop {
-  color: red;
+    color: red;
 }
 
 .timer-status.start {
-  color: lime;
+    color: lime;
 }
 
-.action-delay{
-  flex: 8;
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: start;
-  margin-left: 30px;
-  gap: 10px;
+.action-delay {
+    flex: 8;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    margin-left: 30px;
+    gap: 10px;
 }
 
-.action-delay>select{
-  font-size: 1.5rem;
-  border-radius: 10px;
-  background-color: dodgerblue;
-  padding-left: 0.5vw;
+.action-delay > select {
+    font-size: 1.5rem;
+    border-radius: 10px;
+    background-color: dodgerblue;
+    padding-left: 0.5vw;
 }
 
-.mouse-pos{
-  flex: 4;
-  font-size: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
+.mouse-pos {
+    flex: 4;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
 }
 
-.mouse-pos>*{
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.mouse-pos > * {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.mouse-x, .mouse-y{
-  flex: 5;
+.mouse-x, .mouse-y {
+    flex: 5;
 }
 
-.mouse-separator{
-  flex: 1;
+.mouse-separator {
+    flex: 1;
 }
 
-.action-buttons{
-  flex: 10;
-  height: 70%;
-  display: flex;
-  align-items: stretch;
-  justify-content: right;
-  box-sizing: border-box;
-  gap: clamp(1vw, 10px, 2vw);
+.action-buttons {
+    flex: 10;
+    height: 70%;
+    display: flex;
+    align-items: stretch;
+    justify-content: right;
+    box-sizing: border-box;
+    gap: clamp(1vw, 10px, 2vw);
 }
 
-action-button{
-  height: 100%;
+action-button {
+    height: 100%;
 }
 
 
-dialog[open]{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  top: 50%;
-  z-index: 10;
-  background-color: midnightblue;
-  border: 5px inset dodgerblue;
-  color: white;
-  border-radius: 10px;
-  transform: translateY(-50%);
-  gap: 2vh;
+dialog[open] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    top: 50%;
+    z-index: 10;
+    background-color: midnightblue;
+    border: 5px inset dodgerblue;
+    color: white;
+    border-radius: 10px;
+    transform: translateY(-50%);
+    gap: 2vh;
 }
 
-dialog[open]>h2{
-  margin: 0;
-  padding: 0;
-  text-transform: uppercase;
+dialog[open] > h2 {
+    margin: 0;
+    padding: 0;
+    text-transform: uppercase;
 }
 
-dialog[open]>input{
-  border-radius: 10px;
-  resize: none;
-  width: 100%;
-  font-size: 1.5rem;
-  margin-bottom: 5vh;
+dialog[open] > input {
+    border-radius: 10px;
+    resize: none;
+    width: 100%;
+    font-size: 1.5rem;
+    margin-bottom: 5vh;
 }
 
-.dialog-actions{
-  width: 100%;
-  display:flex;
-  align-items: center;
-  justify-content: space-around;
-  gap: 2vw;
+.dialog-actions {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 2vw;
 }
 
-.dialog-actions>button{
-  flex:1;
-  font-size: 2rem;
-  border-radius: 10px;
-  background-color: dodgerblue;
-  border: 3px inset dodgerblue;
-  cursor: pointer;
+.dialog-actions > button {
+    flex: 1;
+    font-size: 2rem;
+    border-radius: 10px;
+    background-color: dodgerblue;
+    border: 3px inset dodgerblue;
+    cursor: pointer;
 }
 
-.dialog-actions>button:hover{
-  background-color: steelblue;
+.dialog-actions > button:hover {
+    background-color: steelblue;
 }
 
-.dialog-actions>button:active{
-  background-color: midnightblue;
+.dialog-actions > button:active {
+    background-color: midnightblue;
 }
 
-@keyframes spinning-anim{
-  from {
-  }
-  50%{
-    transform: rotate(180deg);
-  }
-  to{
-    transform: rotate(360deg);
-  }
+@keyframes spinning-anim {
+    from {
+    }
+    50% {
+        transform: rotate(180deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 
