@@ -1,0 +1,9 @@
+<button (click)="runCode()">RUN</button>
+<div id="pageContainer">
+  <div id="outputPane">
+    <pre id="generatedCode"><code>{{ code() }}</code></pre>
+    <div  id="output">{{ output() }}</div>
+  </div>
+  <div #blocklyDiv id="blocklyDiv"></div>
+</div>
+<router-outlet></router-outlet>
