@@ -1,3 +1,5 @@
+mod emulation;
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
   tauri::Builder::default()
@@ -11,6 +13,18 @@ pub fn run() {
       }
       Ok(())
     })
+    .invoke_handler(tauri::generate_handler![emulate_key, move_cursor])
     .run(tauri::generate_context!())
     .expect("error while building tauri application");
+}
+
+
+#[tauri::command]
+fn emulate_key(key: String) -> Result<(), String> {
+  emulation::core::press(&key)
+}
+
+#[tauri::command]
+fn move_cursor(x: i32, y: i32) -> Result<(), String> {
+  emulation::core::move_cursor(x, y)
 }

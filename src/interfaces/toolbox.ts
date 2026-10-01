@@ -72,6 +72,8 @@ export const toolbox: Blockly.utils.toolbox.ToolboxInfo = {
             KEY: { shadow: { type: 'mkb_key' } },
           },
         },
+        { kind: 'block', type: 'await' },
+        { kind: 'block', type: 'await_ms' },
       ],
     },
     {
@@ -110,6 +112,32 @@ export const customBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     inputsInline: true,
     colour: 45,
     tooltip: 'Esegue i blocchi contenuti ogni volta che viene premuto il tasto',
+    helpUrl: '',
+  },
+  {
+    type: 'await',
+    message0: 'Aspetta %1',
+    args0: [
+      { type: 'input_value', name: 'AMOUNT', check: 'Number' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: 45,
+    tooltip: 'Aspetta un certo numero di secondi',
+    helpUrl: '',
+  },
+  {
+    type: 'await_ms',
+    message0: 'Aspetta (ms) %1',
+    args0: [
+      { type: 'input_value', name: 'AMOUNT', check: 'Number' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: 45,
+    tooltip: 'Aspetta un certo numero di millisecondi',
     helpUrl: '',
   },
   {

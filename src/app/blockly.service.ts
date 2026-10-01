@@ -35,6 +35,7 @@ export class BlocklyService {
         'onKey',
         'print',
         'pressKey',
+        'moveCursor',
         code
       )(
         (callback: () => void) => {
@@ -51,7 +52,7 @@ export class BlocklyService {
             this.peripheralsService.keyPressed
               .pipe(filter((pressed) => pressed === key))
               .subscribe((value) => {
-                this.writeLog(`Tasto premuto: ${value}`);
+                this.writeLog(`Input tasto: ${value}`);
                 callback();
               })
           );
@@ -60,7 +61,14 @@ export class BlocklyService {
           this.writeLog(msg);
         },
         (msg: unknown) => {
-          this.writeLog(`Mouse e Tastiera: ${msg}`);
+          this.peripheralsService.emulate(String(msg))
+            .then(_ => this.writeLog(`Emulazione tasto: ${msg}`))
+            .catch(_ => this.writeLog(`Emulazione fallita: ${msg}`));
+        },
+        (x: unknown, y: unknown) => {
+          this.peripheralsService.moveCursor(Number(x), Number(y))
+            .then(_ => this.writeLog(`Movimento cursore: ${x}, ${y}`))
+            .catch(_ => this.writeLog(`Movimento fallito: ${x}, ${y}`));
         },
       );
     } catch (error) {
@@ -85,21 +93,31 @@ export class BlocklyService {
       return [JSON.stringify(value), Order.ATOMIC];
     };
 
-    javascriptGenerator.forBlock['move_cursor'] = function (block: any) {
-      const value = block.getFieldValue('VALUE');
-      return [JSON.stringify(value), Order.ATOMIC];
+    javascriptGenerator.forBlock['move_cursor'] = function (block: any, generator: CodeGenerator) {
+      const x = generator.valueToCode(block, 'X', Order.NONE) || "0";
+      const y = generator.valueToCode(block, 'Y', Order.NONE) || "0";
+      return `moveCursor(${x}, ${y});\n`;
     };
 
     javascriptGenerator.forBlock['on_start'] = function (block: any, generator: CodeGenerator) {
       const body = generator.statementToCode(block, 'DO');
-      return `onStart(() => {\n${body}});\n`;
+      return `onStart(async () => {\n${body}});\n`;
     };
 
-    // Registra un listener che resta in attesa dell'evento
     javascriptGenerator.forBlock['on_key'] = function (block: any, generator: CodeGenerator) {
       const key = generator.valueToCode(block, 'KEY', Order.NONE) || "''";
       const body = generator.statementToCode(block, 'DO');
-      return `onKey(${key}, () => {\n${body}});\n`;
+      return `onKey(${key}, async () => {\n${body}});\n`;
+    };
+
+    javascriptGenerator.forBlock['await'] = function (block: any, generator: CodeGenerator) {
+      const value = generator.valueToCode(block, 'AMOUNT', Order.NONE) || '0';
+      return `await new Promise((resolve) => setTimeout(resolve, ${Number(value)*1000}));\n`;
+    };
+
+    javascriptGenerator.forBlock['await_ms'] = function (block: any, generator: CodeGenerator) {
+      const value = generator.valueToCode(block, 'AMOUNT', Order.NONE) || '0';
+      return `await new Promise((resolve) => setTimeout(resolve, ${value}));\n`;
     };
   }
 
