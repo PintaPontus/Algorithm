@@ -25,4 +25,8 @@ export class App {
     this.peripheralsService.emitKey(key);
   }
 
+  save() {
+    this.workspace().saveState();
+  }
+
 }

@@ -13,8 +13,6 @@ export class BlocklyService {
 
   private readonly peripheralsService = inject(PeripheralsService);
 
-  workspaceState: object | undefined;
-
   private readonly blocklyStartedSubject = new Subject<void>();
   readonly blocklyStarted = this.blocklyStartedSubject.asObservable();
 
@@ -42,7 +40,7 @@ export class BlocklyService {
           this.listeners.add(
             this.blocklyStarted
               .subscribe(() => {
-                this.writeLog(`Programma startato!`);
+                this.writeLog(`Programma avviato!`);
                 callback();
               })
           );

@@ -15,6 +15,7 @@ import {javascriptGenerator} from 'blockly/javascript';
 import {toolbox} from '../../interfaces/toolbox';
 import {BlocklyService} from '../blockly.service';
 import {FormsModule} from '@angular/forms';
+import {StorageService} from '../storage.service';
 
 @Component({
   imports: [
@@ -26,6 +27,7 @@ import {FormsModule} from '@angular/forms';
 })
 export class BlockWorkspace {
   private readonly blocklyService = inject(BlocklyService);
+  private readonly storageService = inject(StorageService);
 
   readonly blocklyDiv = viewChild<ElementRef<HTMLDivElement>>('blocklyDiv');
   readonly code = signal('');
@@ -34,7 +36,7 @@ export class BlockWorkspace {
   private workspace: Blockly.WorkspaceSvg | undefined;
 
   constructor() {
-    afterRenderEffect(() => {
+    afterRenderEffect(async () => {
       const divEl = this.blocklyDiv()?.nativeElement
       if(divEl){
 
@@ -43,7 +45,8 @@ export class BlockWorkspace {
         });
         this.blocklyService.setupGenerator(javascriptGenerator);
 
-        const saved = this.blocklyService.workspaceState;
+        await this.storageService.print();
+        const saved = await this.storageService.get("workspace");
         if (saved) {
           Blockly.serialization.workspaces.load(saved, this.workspace);
         }
@@ -62,14 +65,14 @@ export class BlockWorkspace {
 
           const code = javascriptGenerator.workspaceToCode(this.workspace);
           this.code.set(code);
-          this.blocklyService.workspaceState = Blockly.serialization.workspaces.save(this.workspace!);
+          this.saveState();
         });
       }
     });
 
     inject(DestroyRef).onDestroy(() => {
       if(this.workspace){
-        this.blocklyService.workspaceState = Blockly.serialization.workspaces.save(this.workspace);
+        this.saveState();
         this.workspace.dispose();
         this.workspace = undefined;
       }
@@ -79,6 +82,12 @@ export class BlockWorkspace {
   runCode()  {
     this.blocklyService.start(this.code());
   };
+
+  async saveState(){
+    const workspaceState = Blockly.serialization.workspaces.save(this.workspace!);
+    console.log("workspaceState: ", workspaceState);
+    await this.storageService.set("workspace", workspaceState);
+  }
 
 
 }
