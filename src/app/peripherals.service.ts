@@ -24,7 +24,12 @@ export class PeripheralsService {
       .subscribe((key) => this.emitKey(key));
   }
 
-  emitKey(key: string) {
+  simPress(key: string){
+    console.log("Tasto simulato: ", key);
+    this.emitKey(key);
+  }
+  
+  private emitKey(key: string) {
     this.keyPressedSubject.next(key);
   }
 

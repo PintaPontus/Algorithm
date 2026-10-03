@@ -1,47 +1,106 @@
 import {Service} from '@angular/core';
 import {load, Store} from '@tauri-apps/plugin-store';
 import {isTauri} from '@tauri-apps/api/core';
+import {WorkspaceInfo} from '../interfaces/workspace';
 
 @Service()
 export class StorageService {
 
-  private store: Promise<Store> | undefined;
+  private settingsStore: Promise<Store> | undefined;
+  private workspaceStore: Promise<Store> | undefined;
 
-  private getStore(): Promise<Store> {
-    this.store ??= load('state.json', {autoSave: 500, defaults: {}}).catch((e) => {
-      this.store = undefined; // permette di riprovare alla chiamata successiva
-      console.error('Apertura store fallita:', e);
-      throw e;
-    });
-    return this.store;
+  private getSettingsStore(): Promise<Store> {
+    this.settingsStore ??= load('settings.json', {autoSave: 500, defaults: {}})
+      .catch((e) => {
+        this.settingsStore = undefined;
+        console.error('Apertura store settings fallita:', e);
+        throw e;
+      });
+    return this.settingsStore;
   }
 
-  async get<T>(key: string): Promise<T | undefined> {
+  private getWorkspaceStore(): Promise<Store> {
+    this.workspaceStore ??= load('workspace.json', {autoSave: 500, defaults: {}})
+      .catch((e) => {
+        this.workspaceStore = undefined;
+        console.error('Apertura store workspace fallita:', e);
+        throw e;
+      });
+    return this.workspaceStore;
+  }
+
+  async getSetting<T>(key: string): Promise<T | undefined> {
     if (!isTauri()) {
-      const raw = localStorage.getItem(key);
+      const raw = localStorage.getItem(`set_${key}`);
       return raw === null ? undefined : (JSON.parse(raw) as T);
     }
-    return (await this.getStore()).get<T>(key);
+    return (await this.getSettingsStore()).get<T>(key);
   }
 
-  async set<T>(key: string, value: T): Promise<void> {
+  async setSetting<T>(key: string, value: T): Promise<void> {
     if (!isTauri()) {
-      localStorage.setItem(key, JSON.stringify(value));
+      localStorage.setItem(`set_${key}`, JSON.stringify(value));
       return;
     }
-    await (await this.getStore()).set(key, value);
-    // await this.flush();
-    await this.print();
+    await (await this.getSettingsStore()).set(key, value);
   }
 
-  async flush() {
+  async flushSettings() {
     if (!isTauri()) return;
-    await (await this.getStore()).save();
+    await (await this.getSettingsStore()).save();
+  }
+
+  async getAllWorkspaces(): Promise<WorkspaceInfo[]> {
+    if (!isTauri()) {
+      const prefix = 'ws_';
+      const result: WorkspaceInfo[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const fullKey = localStorage.key(i);
+        if (fullKey?.startsWith(prefix)) {
+          const raw = localStorage.getItem(fullKey);
+          if (raw !== null) {
+            result.push(JSON.parse(raw) as WorkspaceInfo);
+          }
+        }
+      }
+      return result;
+    }
+    return (await (await this.getWorkspaceStore()).entries<WorkspaceInfo>())
+      .map(([_, value])=> value);
+  }
+
+  async getWorkspace(key: string): Promise<WorkspaceInfo | undefined> {
+    if (!isTauri()) {
+      const raw = localStorage.getItem(`ws_${key}`);
+      return raw === null ? undefined : (JSON.parse(raw) as WorkspaceInfo);
+    }
+    return (await this.getWorkspaceStore()).get<WorkspaceInfo>(key);
+  }
+
+  async setWorkspace(key: string, value: WorkspaceInfo): Promise<void> {
+    if (!isTauri()) {
+      localStorage.setItem(`ws_${key}`, JSON.stringify(value));
+      return;
+    }
+    await (await this.getWorkspaceStore()).set(key, value);
+  }
+
+  async deleteWorkspace(key: string): Promise<void> {
+    if (!isTauri()) {
+      localStorage.removeItem(`ws_${key}`);
+      return;
+    }
+    await (await this.getWorkspaceStore()).delete(key);
+  }
+
+  async flushWorkspace() {
+    if (!isTauri()) return;
+    await (await this.getWorkspaceStore()).save();
   }
 
   async print() {
-    console.log("isTauri: ", isTauri())
     if (!isTauri()) return;
-    console.log(await (await this.getStore()).values());
+    console.log("Settings: ", await (await this.getSettingsStore()).values());
+    console.log("Workspaces: ", await (await this.getWorkspaceStore()).values());
   }
 }

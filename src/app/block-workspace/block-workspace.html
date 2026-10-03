@@ -1,5 +1,19 @@
-<div #blocklyDiv id="blocklyDiv"></div>
-<div id="outputPane">
-  <pre id="generatedCode"><code>{{ code() }}</code></pre>
-  <textarea  id="output" [(ngModel)]="output //noinspection ConstantReassignment"></textarea>
+<div class="toolbar">
+  <a matButton routerLink=""><mat-icon>arrow_top_left</mat-icon></a>
+  @if(isRunning()){
+    <button matFab (click)="stopCode()"><mat-icon>stop</mat-icon></button>
+  } @else{
+    <button matFab (click)="runCode()"><mat-icon>play_arrow</mat-icon></button>
+  }
+<!--  <button matButton="filled" (click)="simPress()">SIM PRESS</button>-->
+<!--  <button matButton="filled" (click)="saveState()">SAVE</button>-->
+  <span class="key-pressed">{{keyPressed() || 'Nessun tasto premuto'}}</span>
+</div>
+<div class="editor">
+  <div #blocklyDiv id="blocklyDiv"></div>
+  <div id="outputPane">
+    <pre id="generatedCode"><code>{{ code() }}</code></pre>
+    <span>Console:</span>
+    <textarea  id="output" [contentEditable]="false" [value]="output()"></textarea>
+  </div>
 </div>

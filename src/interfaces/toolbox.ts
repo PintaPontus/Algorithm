@@ -69,11 +69,23 @@ export const toolbox: Blockly.utils.toolbox.ToolboxInfo = {
           kind: 'block',
           type: 'on_key',
           inputs: {
-            KEY: { shadow: { type: 'mkb_key' } },
+            KEY: { block: { type: 'mkb_key' } },
           },
         },
-        { kind: 'block', type: 'await' },
-        { kind: 'block', type: 'await_ms' },
+        {
+          kind: 'block',
+          type: 'await',
+          inputs: {
+            AMOUNT: { block: { type: 'math_number', fields: { NUM: 5 } } },
+          }
+        },
+        {
+          kind: 'block',
+          type: 'await_ms',
+          inputs: {
+            AMOUNT: { block: { type: 'math_number', fields: { NUM: 5000 } } },
+          }
+        },
       ],
     },
     {

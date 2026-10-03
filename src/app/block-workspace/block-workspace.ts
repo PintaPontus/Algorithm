@@ -1,6 +1,6 @@
 import {
   afterRenderEffect,
-  Component,
+  Component, computed,
   DestroyRef,
   ElementRef,
   inject,
@@ -16,10 +16,20 @@ import {toolbox} from '../../interfaces/toolbox';
 import {BlocklyService} from '../blockly.service';
 import {FormsModule} from '@angular/forms';
 import {StorageService} from '../storage.service';
+import {toSignal} from '@angular/core/rxjs-interop';
+import {PeripheralsService} from '../peripherals.service';
+import {ActivatedRoute, RouterLink} from '@angular/router';
+import {WorkspaceInfo} from '../../interfaces/workspace';
+import {MatButton, MatFabButton} from '@angular/material/button';
+import {MatIcon} from '@angular/material/icon';
 
 @Component({
   imports: [
-    FormsModule
+    FormsModule,
+    MatButton,
+    MatIcon,
+    RouterLink,
+    MatFabButton
   ],
   selector: 'app-block-workspace',
   styleUrl: './block-workspace.css',
@@ -27,29 +37,47 @@ import {StorageService} from '../storage.service';
 })
 export class BlockWorkspace {
   private readonly blocklyService = inject(BlocklyService);
+  private readonly peripheralsService = inject(PeripheralsService);
   private readonly storageService = inject(StorageService);
 
+  readonly route = inject(ActivatedRoute);
+  readonly routeParamMap = toSignal(this.route.paramMap);
   readonly blocklyDiv = viewChild<ElementRef<HTMLDivElement>>('blocklyDiv');
+
+  readonly id = computed(() => this.routeParamMap()?.get('id') ?? null);
+  private workspaceInfo: WorkspaceInfo | undefined = undefined;
+  readonly title = signal<string>('');
+  readonly description = signal<string>('');
+
+  readonly blocklyRunning = toSignal(this.blocklyService.blocklyStarted);
+  readonly isRunning = computed(() => this.blocklyRunning() === this.id());
+
   readonly code = signal('');
-  readonly output = this.blocklyService.output;
+  readonly output = this.blocklyService.getOutput();
+
+  readonly keyPressed = toSignal(this.peripheralsService.keyPressed);
 
   private workspace: Blockly.WorkspaceSvg | undefined;
 
   constructor() {
     afterRenderEffect(async () => {
-      const divEl = this.blocklyDiv()?.nativeElement
-      if(divEl){
+      await this.clearWorkspace();
+      if(this.id()){
+        this.workspaceInfo = await this.storageService.getWorkspace(this.id()!);
+        this.title.set(this.workspaceInfo?.title ?? this.id()!);
+        this.description.set(this.workspaceInfo?.description ?? '');
+      }
 
+      const divEl = this.blocklyDiv()?.nativeElement;
+      if(divEl){
         this.workspace = Blockly.inject(divEl, {
           toolbox,
         });
-        this.blocklyService.setupGenerator(javascriptGenerator);
 
-        await this.storageService.print();
-        const saved = await this.storageService.get("workspace");
-        if (saved) {
-          Blockly.serialization.workspaces.load(saved, this.workspace);
+        if (this.workspaceInfo?.state) {
+          Blockly.serialization.workspaces.load(this.workspaceInfo.state, this.workspace);
         }
+
         this.code.set(javascriptGenerator.workspaceToCode(this.workspace));
 
         const supportedEvents = new Set([
@@ -70,24 +98,51 @@ export class BlockWorkspace {
       }
     });
 
-    inject(DestroyRef).onDestroy(() => {
-      if(this.workspace){
-        this.saveState();
-        this.workspace.dispose();
-        this.workspace = undefined;
-      }
+    inject(DestroyRef).onDestroy(async () => {
+      await this.clearWorkspace(true);
     });
   }
 
   runCode()  {
-    this.blocklyService.start(this.code());
+    this.blocklyService.startCode(this.id()!, this.code());
   };
 
-  async saveState(){
-    const workspaceState = Blockly.serialization.workspaces.save(this.workspace!);
-    console.log("workspaceState: ", workspaceState);
-    await this.storageService.set("workspace", workspaceState);
+  stopCode()  {
+    this.blocklyService.stopCode();
+  };
+
+  simPress() {
+    const key = 'Mouse 1';
+    this.peripheralsService.simPress(key);
   }
 
+  async saveState(flush: boolean = false){
+    if(this.id()){
+      const newInfo: WorkspaceInfo = {
+        id: this.id()!,
+        title: this.title(),
+        description: this.description(),
+        lastUpdated: Date.now(),
+        state: this.workspace ? Blockly.serialization.workspaces.save(this.workspace!) : undefined
+      }
+      await this.storageService.setWorkspace(
+        this.id()!,
+        newInfo
+      );
+    }
+    if(flush){
+      await this.storageService.flushWorkspace();
+    }
+  }
+
+  private async clearWorkspace(save: boolean = false){
+    if(this.workspace){
+      if(save){
+        await this.saveState(true);
+      }
+      this.workspace.dispose();
+      this.workspace = undefined;
+    }
+  }
 
 }

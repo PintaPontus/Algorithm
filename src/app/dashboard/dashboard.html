@@ -1,0 +1,46 @@
+<div class="dashboard-actions">
+  <mat-form-field class="search-input">
+    <input
+      [(ngModel)]="textSearch //noinspection ConstantReassignment"
+      class="search-input-box"
+      matInput
+      placeholder="Cerca uno script"
+    />
+  </mat-form-field>
+  <a matFab [routerLink]="`/script/${crypto.randomUUID()}`">
+    <mat-icon>add</mat-icon>
+  </a>
+  <button matFab>
+    <mat-icon>download</mat-icon>
+  </button>
+</div>
+<div class="script-list">
+  @for (script of scriptList.value(); track script.id){
+    <mat-card appearance="filled">
+      <mat-card-header>
+        <mat-card-title>{{script.title}}</mat-card-title>
+        <mat-card-subtitle>{{script.description}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions align="end" class="script-action">
+        @if(playingScript() === script.id){
+          <button matMiniFab (click)="stopAll()">
+            <mat-icon>stop</mat-icon>
+          </button>
+        } @else{
+          <button matMiniFab (click)="playWorkspace(script.id)">
+            <mat-icon>play_arrow</mat-icon>
+          </button>
+        }
+        <a matMiniFab [routerLink]="`/script/${script.id}`">
+          <mat-icon>edit</mat-icon>
+        </a>
+        <button matMiniFab>
+          <mat-icon>upload</mat-icon>
+        </button>
+        <button matMiniFab (click)="deleteWorkspace(script.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  }
+</div>
