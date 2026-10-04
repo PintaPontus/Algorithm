@@ -10,6 +10,18 @@
     "store:default",
     "core:window:allow-destroy",
     "dialog:default",
-    "fs:default"
+    "fs:default",
+    {
+      "identifier": "fs:allow-app-read-recursive",
+      "allow": [{ "path": "$APPDATA/*" }, { "path": "$HOME" }, { "path": "$HOME/**/*" }]
+    },
+    {
+      "identifier": "fs:allow-app-write-recursive",
+      "allow": [{ "path": "$APPDATA/*" }, { "path": "$HOME" }, { "path": "$HOME/**/*" }]
+    },
+    {
+      "identifier": "fs:allow-exists",
+      "allow": [{ "path": "$APPDATA/*" }, { "path": "$HOME" }, { "path": "$HOME/**/*" }]
+    }
   ]
 }
