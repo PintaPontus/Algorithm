@@ -39,11 +39,11 @@ import {MatDivider} from '@angular/material/list';
     MatLabel,
     MatDivider
   ],
-  selector: 'app-block-workspace',
-  styleUrl: './block-workspace.css',
-  templateUrl: './block-workspace.html',
+  selector: 'app-editor',
+  styleUrl: './editor.css',
+  templateUrl: './editor.html',
 })
-export class BlockWorkspace {
+export class Editor {
   private readonly blocklyService = inject(BlocklyService);
   private readonly peripheralsService = inject(PeripheralsService);
   private readonly storageService = inject(StorageService);

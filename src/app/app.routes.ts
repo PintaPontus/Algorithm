@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import {Dashboard} from './dashboard/dashboard';
-import {BlockWorkspace} from './block-workspace/block-workspace';
+import {Editor} from './editor/editor';
 
 export const routes: Routes = [
   {
@@ -9,7 +9,7 @@ export const routes: Routes = [
   },
   {
     path: 'script/:id',
-    component: BlockWorkspace,
+    component: Editor,
   },
   {path: '**', redirectTo: '',},
 ];

@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BlockWorkspace } from './block-workspace';
+import { Editor } from './editor';
 
 describe('BlockWorkspaceComponent', () => {
-  let component: BlockWorkspace;
-  let fixture: ComponentFixture<BlockWorkspace>;
+  let component: Editor;
+  let fixture: ComponentFixture<Editor>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BlockWorkspace],
+      imports: [Editor],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(BlockWorkspace);
+    fixture = TestBed.createComponent(Editor);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
