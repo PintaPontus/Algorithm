@@ -7,16 +7,11 @@
       matInput
       placeholder="Cerca uno Script"
     />
-    @if (textSearch()) {
-      <button matSuffix matIconButton (click)="textSearch.set('')">
-        <mat-icon>close</mat-icon>
-      </button>
-    }
   </mat-form-field>
-  <a matFab [routerLink]="`/script/${newScriptId}`">
+  <a matFab [routerLink]="`/script/${newScriptId}`" matTooltip="Aggiungi">
     <mat-icon>add</mat-icon>
   </a>
-  <button matFab (click)="import()">
+  <button matFab (click)="import()" matTooltip="Importa">
     <mat-icon>download</mat-icon>
   </button>
 </div>
@@ -40,21 +35,24 @@
         </mat-card-header>
         <mat-card-actions align="end" class="script-action">
           @if(playingScript() === script.id){
-            <button matMiniFab (click)="stopAll()">
+            <button matMiniFab (click)="stopAll()" matTooltip="Avvia">
               <mat-icon>stop</mat-icon>
             </button>
           } @else{
-            <button matMiniFab (click)="playWorkspace(script.id)">
+            <button matMiniFab (click)="playWorkspace(script.id)" matTooltip="Ferma">
               <mat-icon>play_arrow</mat-icon>
             </button>
           }
-          <a matMiniFab [routerLink]="`/script/${script.id}`">
+          <a matMiniFab [routerLink]="`/script/${script.id}`" matTooltip="Modifica">
             <mat-icon>edit</mat-icon>
           </a>
-          <button matMiniFab (click)="export(script)">
+          <button matMiniFab (click)="duplicate(script)" matTooltip="Duplica">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+          <button matMiniFab (click)="export(script)" matTooltip="Esporta">
             <mat-icon>upload</mat-icon>
           </button>
-          <button matMiniFab (click)="deleteWorkspace(script.id)">
+          <button matMiniFab (click)="deleteWorkspace(script.id)" matTooltip="Elimina">
             <mat-icon>delete</mat-icon>
           </button>
         </mat-card-actions>

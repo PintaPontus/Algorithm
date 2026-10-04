@@ -98,6 +98,12 @@ export class StorageService {
     await (await this.getWorkspaceStore()).delete(key);
   }
 
+  async duplicateWorkspace(info: WorkspaceInfo) {
+    const newId = crypto.randomUUID();
+    info.id = newId;
+    await this.setWorkspace(newId, info);
+  }
+
   async exportWorkspace(info: WorkspaceInfo) {
     try{
       const path = await save({
@@ -130,9 +136,7 @@ export class StorageService {
       });
       if(path){
         const contents: WorkspaceInfo = JSON.parse(await readTextFile(path));
-        const newId = crypto.randomUUID();
-        contents.id = newId;
-        await this.setWorkspace(newId, contents);
+        await this.duplicateWorkspace( contents);
       }
     } catch (e) {
       this.snackBar.open('Import workspace fallito', 'Ok', {

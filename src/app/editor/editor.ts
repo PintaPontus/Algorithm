@@ -26,6 +26,7 @@ import {MatIcon} from '@angular/material/icon';
 import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {CursorCoordinates, FormattedCursorCoordinates} from '../../interfaces/peripherals';
 import {MatDivider} from '@angular/material/list';
+import {MatTooltip} from '@angular/material/tooltip';
 
 @Component({
   imports: [
@@ -37,7 +38,8 @@ import {MatDivider} from '@angular/material/list';
     MatFormField,
     MatInput,
     MatLabel,
-    MatDivider
+    MatDivider,
+    MatTooltip
   ],
   selector: 'app-editor',
   styleUrl: './editor.css',

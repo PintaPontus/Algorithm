@@ -19,12 +19,12 @@
   <div class="toolbar-actions">
     <a matButton="outlined" routerLink=""><mat-icon>arrow_top_left</mat-icon>Indietro</a>
     @if(isRunning()){
-      <button matFab (click)="stopCode()"><mat-icon>stop</mat-icon></button>
+      <button matFab (click)="stopCode()" matTooltip="Ferma"><mat-icon>stop</mat-icon></button>
     } @else{
-      <button matFab (click)="runCode()"><mat-icon>play_arrow</mat-icon></button>
+      <button matFab (click)="runCode()" matTooltip="Avvia"><mat-icon>play_arrow</mat-icon></button>
     }
-    <button matFab (click)="export()"><mat-icon>upload</mat-icon></button>
-    <button matFab (click)="toggleOutput()"><mat-icon>{{ showOutput() ? 'code_off' : 'code' }}</mat-icon></button>
+    <button matFab (click)="export()" matTooltip="Esporta"><mat-icon>upload</mat-icon></button>
+    <button matFab (click)="toggleOutput()" [matTooltip]="showOutput() ? 'Nascondi output' : 'Mostra output'"><mat-icon>{{ showOutput() ? 'code_off' : 'code' }}</mat-icon></button>
     <span class="script-edit-stat">Cursore: {{formattedCoordinates().x}}:{{formattedCoordinates().y}}</span>
     -
     <span class="script-edit-stat">{{keyPressed() || 'Nessun tasto premuto'}}</span>

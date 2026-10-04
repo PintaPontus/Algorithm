@@ -2,12 +2,13 @@ import {Component, computed, inject, resource, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {MatCard, MatCardActions, MatCardHeader, MatCardSubtitle, MatCardTitle} from '@angular/material/card';
-import {MatFabButton, MatIconButton, MatMiniFabButton} from '@angular/material/button';
+import {MatFabButton, MatMiniFabButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {RouterLink} from '@angular/router';
 import {StorageService} from '../storage.service';
 import {BlocklyService} from '../blockly.service';
 import {WorkspaceInfo} from '../../interfaces/workspace';
+import {MatTooltip} from '@angular/material/tooltip';
 
 @Component({
   imports: [
@@ -24,7 +25,7 @@ import {WorkspaceInfo} from '../../interfaces/workspace';
     MatFabButton,
     RouterLink,
     MatLabel,
-    MatIconButton
+    MatTooltip
   ],
   selector: 'app-dashboard',
   styleUrl: './dashboard.css',
@@ -62,6 +63,11 @@ export class Dashboard {
 
   async deleteWorkspace(workspaceId: string) {
     await this.storageService.deleteWorkspace(workspaceId);
+    this.scriptList.reload();
+  }
+
+  async duplicate(info: WorkspaceInfo){
+    await this.storageService.duplicateWorkspace({...info, title: `${info.title} (copia)`});
     this.scriptList.reload();
   }
 
