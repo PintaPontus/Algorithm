@@ -10,7 +10,7 @@
   <a matFab [routerLink]="`/script/${crypto.randomUUID()}`">
     <mat-icon>add</mat-icon>
   </a>
-  <button matFab>
+  <button matFab (click)="import()">
     <mat-icon>download</mat-icon>
   </button>
 </div>
@@ -34,7 +34,7 @@
         <a matMiniFab [routerLink]="`/script/${script.id}`">
           <mat-icon>edit</mat-icon>
         </a>
-        <button matMiniFab>
+        <button matMiniFab (click)="export(script)">
           <mat-icon>upload</mat-icon>
         </button>
         <button matMiniFab (click)="deleteWorkspace(script.id)">

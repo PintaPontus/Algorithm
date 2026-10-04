@@ -5,6 +5,7 @@
   } @else{
     <button matFab (click)="runCode()"><mat-icon>play_arrow</mat-icon></button>
   }
+  <button matFab (click)="export()"><mat-icon>upload</mat-icon></button>
 <!--  <button matButton="filled" (click)="simPress()">SIM PRESS</button>-->
 <!--  <button matButton="filled" (click)="saveState()">SAVE</button>-->
   <span class="key-pressed">{{keyPressed() || 'Nessun tasto premuto'}}</span>

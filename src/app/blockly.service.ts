@@ -38,16 +38,6 @@ export class BlocklyService {
     }
   }
 
-  generateCodeFromState(state: {[key: string]: any}): string {
-    const headless = new Blockly.Workspace();
-    try {
-      Blockly.serialization.workspaces.load(state, headless);
-      return javascriptGenerator.workspaceToCode(headless);
-    } finally {
-      headless.dispose();
-    }
-  }
-
   startCode(id: string, code: string) {
     this.stopCode();
     this.output.set('');
@@ -152,6 +142,16 @@ export class BlocklyService {
     };
   }
 
+  private generateCodeFromState(state: {[key: string]: any}): string {
+    const headless = new Blockly.Workspace();
+    try {
+      Blockly.serialization.workspaces.load(state, headless);
+      return javascriptGenerator.workspaceToCode(headless);
+    } finally {
+      headless.dispose();
+    }
+  }
+
   private print(msg: any){
     this.output.update(lines => `${lines}${msg}\n`);
   }
@@ -159,4 +159,5 @@ export class BlocklyService {
   private writeLog(msg: any, level: 'info' | 'error' = 'info'){
     this.print(`[${level}]: ${msg}`);
   }
+
 }

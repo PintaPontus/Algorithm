@@ -7,6 +7,7 @@ import {MatIcon} from '@angular/material/icon';
 import {RouterLink} from '@angular/router';
 import {StorageService} from '../storage.service';
 import {BlocklyService} from '../blockly.service';
+import {WorkspaceInfo} from '../../interfaces/workspace';
 
 @Component({
   imports: [
@@ -53,6 +54,15 @@ export class Dashboard {
 
   async deleteWorkspace(workspaceId: string) {
     await this.storageService.deleteWorkspace(workspaceId);
+    this.scriptList.reload();
+  }
+
+  async export(info: WorkspaceInfo){
+    await this.storageService.exportWorkspace(info);
+  }
+
+  async import(){
+    await this.storageService.importWorkspace();
     this.scriptList.reload();
   }
 

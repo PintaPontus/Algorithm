@@ -118,20 +118,28 @@ export class BlockWorkspace {
 
   async saveState(flush: boolean = false){
     if(this.id()){
-      const newInfo: WorkspaceInfo = {
-        id: this.id()!,
-        title: this.title(),
-        description: this.description(),
-        lastUpdated: Date.now(),
-        state: this.workspace ? Blockly.serialization.workspaces.save(this.workspace!) : undefined
-      }
       await this.storageService.setWorkspace(
         this.id()!,
-        newInfo
+        this.generateWorkspaceInfo(),
       );
     }
     if(flush){
       await this.storageService.flushWorkspace();
+    }
+  }
+
+  async export(){
+    const info = this.generateWorkspaceInfo();
+    await this.storageService.exportWorkspace(info);
+  }
+
+  private generateWorkspaceInfo(): WorkspaceInfo {
+    return {
+      id: this.id()!,
+      title: this.title(),
+      description: this.description(),
+      lastUpdated: Date.now(),
+      state: this.workspace ? Blockly.serialization.workspaces.save(this.workspace!) : undefined,
     }
   }
 

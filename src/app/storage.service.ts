@@ -1,10 +1,15 @@
-import {Service} from '@angular/core';
+import {inject, Service} from '@angular/core';
 import {load, Store} from '@tauri-apps/plugin-store';
 import {isTauri} from '@tauri-apps/api/core';
 import {WorkspaceInfo} from '../interfaces/workspace';
+import {save, open} from '@tauri-apps/plugin-dialog';
+import {readTextFile, writeTextFile} from '@tauri-apps/plugin-fs';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Service()
 export class StorageService {
+
+  private snackBar = inject(MatSnackBar);
 
   private settingsStore: Promise<Store> | undefined;
   private workspaceStore: Promise<Store> | undefined;
@@ -91,6 +96,48 @@ export class StorageService {
       return;
     }
     await (await this.getWorkspaceStore()).delete(key);
+  }
+
+  async exportWorkspace(info: WorkspaceInfo) {
+    try{
+      const path = await save({
+        filters: [
+          {
+            name: 'JSON Script',
+            extensions: ['json'],
+          },
+        ],
+      });
+      if(path){
+        await writeTextFile(
+          path,
+          JSON.stringify(info)
+        );
+      }
+    } catch (e) {
+      this.snackBar.open('Failed to export workspace', 'Ok', {
+        duration: 2000,
+      });
+    }
+  }
+
+  async importWorkspace() {
+    try{
+      const path = await open({
+        multiple: false,
+        directory: false,
+      });
+      if(path){
+        const contents: WorkspaceInfo = JSON.parse(await readTextFile(path));
+        const newId = crypto.randomUUID();
+        contents.id = newId;
+        await this.setWorkspace(newId, contents);
+      }
+    } catch (e) {
+      this.snackBar.open('Failed to import workspace', 'Ok', {
+        duration: 2000,
+      });
+    }
   }
 
   async flushWorkspace() {
