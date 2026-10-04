@@ -1,13 +1,19 @@
+@let newScriptId = crypto.randomUUID();
 <div class="dashboard-actions">
   <mat-form-field class="search-input">
+    <mat-label>Ricerca Script</mat-label>
     <input
       [(ngModel)]="textSearch //noinspection ConstantReassignment"
-      class="search-input-box"
       matInput
-      placeholder="Cerca uno script"
+      placeholder="Cerca uno Script"
     />
+    @if (textSearch()) {
+      <button matSuffix matIconButton (click)="textSearch.set('')">
+        <mat-icon>close</mat-icon>
+      </button>
+    }
   </mat-form-field>
-  <a matFab [routerLink]="`/script/${crypto.randomUUID()}`">
+  <a matFab [routerLink]="`/script/${newScriptId}`">
     <mat-icon>add</mat-icon>
   </a>
   <button matFab (click)="import()">
@@ -15,32 +21,44 @@
   </button>
 </div>
 <div class="script-list">
-  @for (script of scriptList.value(); track script.id){
-    <mat-card appearance="filled">
-      <mat-card-header>
-        <mat-card-title>{{script.title}}</mat-card-title>
-        <mat-card-subtitle>{{script.description}}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-actions align="end" class="script-action">
-        @if(playingScript() === script.id){
-          <button matMiniFab (click)="stopAll()">
-            <mat-icon>stop</mat-icon>
+  @if(scriptList.value().length === 0){
+    <div class="script-empty">
+      <h3>Crea il tuo primo script</h3>
+      <a matFab extended="true" [routerLink]="`/script/${newScriptId}`">
+        <mat-icon>add</mat-icon>
+        Aggiungi
+      </a>
+    </div>
+  } @else if (filteredScriptList().length === 0){
+    <div class="script-empty">Nessuno script trovato: "{{textSearch()}}"</div>
+  } @else {
+    @for (script of filteredScriptList(); track script.id){
+      <mat-card appearance="filled">
+        <mat-card-header>
+          <mat-card-title>{{script.title}}</mat-card-title>
+          <mat-card-subtitle>{{script.description}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions align="end" class="script-action">
+          @if(playingScript() === script.id){
+            <button matMiniFab (click)="stopAll()">
+              <mat-icon>stop</mat-icon>
+            </button>
+          } @else{
+            <button matMiniFab (click)="playWorkspace(script.id)">
+              <mat-icon>play_arrow</mat-icon>
+            </button>
+          }
+          <a matMiniFab [routerLink]="`/script/${script.id}`">
+            <mat-icon>edit</mat-icon>
+          </a>
+          <button matMiniFab (click)="export(script)">
+            <mat-icon>upload</mat-icon>
           </button>
-        } @else{
-          <button matMiniFab (click)="playWorkspace(script.id)">
-            <mat-icon>play_arrow</mat-icon>
+          <button matMiniFab (click)="deleteWorkspace(script.id)">
+            <mat-icon>delete</mat-icon>
           </button>
-        }
-        <a matMiniFab [routerLink]="`/script/${script.id}`">
-          <mat-icon>edit</mat-icon>
-        </a>
-        <button matMiniFab (click)="export(script)">
-          <mat-icon>upload</mat-icon>
-        </button>
-        <button matMiniFab (click)="deleteWorkspace(script.id)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </mat-card-actions>
-    </mat-card>
+        </mat-card-actions>
+      </mat-card>
+    }
   }
 </div>

@@ -1,3 +1,11 @@
+use serde::Serialize;
+
+#[derive(Clone, PartialEq, Serialize)]
+pub struct CursorCoordinates {
+  pub x: i32,
+  pub y: i32,
+}
+
 #[cfg(any(target_os = "windows"))]
 pub fn press(key: &str) -> Result<(), String> {
     use super::win::{key_to_vk, keyboard, mouse};
@@ -29,6 +37,17 @@ pub fn move_cursor(x: i32, y: i32) -> Result<(), String> {
         .map_err(|e| format!("Impossibile spostare il cursore a ({x}, {y}): {e}"))
 }
 
+#[cfg(any(target_os = "windows"))]
+pub fn cursor_position() -> Result<CursorCoordinates, String> {
+  use windows::Win32::Foundation::POINT;
+  use windows::Win32::UI::WindowsAndMessaging::GetCursorPos;
+
+  let mut point = POINT::default();
+  unsafe { GetCursorPos(&mut point) }
+    .map_err(|e| format!("Impossibile leggere la posizione del cursore: {e}"))?;
+  Ok(CursorCoordinates{x: point.x, y: point.y})
+}
+
 #[cfg(any(target_os = "macos", target_os = "linux"))]
 pub fn press(key: &str) -> Result<(), String> {
     todo!("Aggiungere un crate per emulare tastiera e mouse su macOS e Linux")
@@ -37,4 +56,9 @@ pub fn press(key: &str) -> Result<(), String> {
 #[cfg(any(target_os = "macos", target_os = "linux"))]
 pub fn move_cursor(x: i32, y: i32) -> Result<(), String> {
     todo!("Aggiungere un crate per emulare tastiera e mouse su macOS e Linux")
+}
+
+#[cfg(any(target_os = "macos", target_os = "linux"))]
+pub fn cursor_position() -> Result<CursorCoordinates, String> {
+  todo!("Aggiungere un crate per leggere il cursore su macOS e Linux")
 }

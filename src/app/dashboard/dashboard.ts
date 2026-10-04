@@ -1,8 +1,8 @@
-import {Component, inject, resource, signal} from '@angular/core';
+import {Component, computed, inject, resource, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {MatFormField, MatInput} from '@angular/material/input';
+import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {MatCard, MatCardActions, MatCardHeader, MatCardSubtitle, MatCardTitle} from '@angular/material/card';
-import {MatFabButton, MatMiniFabButton} from '@angular/material/button';
+import {MatFabButton, MatIconButton, MatMiniFabButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {RouterLink} from '@angular/router';
 import {StorageService} from '../storage.service';
@@ -22,7 +22,9 @@ import {WorkspaceInfo} from '../../interfaces/workspace';
     MatMiniFabButton,
     MatIcon,
     MatFabButton,
-    RouterLink
+    RouterLink,
+    MatLabel,
+    MatIconButton
   ],
   selector: 'app-dashboard',
   styleUrl: './dashboard.css',
@@ -41,6 +43,12 @@ export class Dashboard {
     },
     defaultValue: []
   });
+
+  readonly filteredScriptList = computed(()=>{
+    return this.scriptList.value().filter((script)=>{
+      return script.title.toLowerCase().includes(this.textSearch().toLowerCase());
+    });
+  })
 
   async playWorkspace(workspaceId: string) {
     await this.blocklyService.startId(workspaceId);

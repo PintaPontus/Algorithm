@@ -1,14 +1,17 @@
-import { Service } from '@angular/core';
+import {DestroyRef, inject, Service, signal} from '@angular/core';
 import {filter, fromEvent, map, merge, Subject} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import { invoke } from '@tauri-apps/api/core';
+import {listen} from '@tauri-apps/api/event';
+import {CursorCoordinates} from '../interfaces/peripherals';
 
 @Service()
 export class PeripheralsService {
 
+  private readonly destroyRef = inject(DestroyRef);
+
   private readonly keyPressedSubject = new Subject<string>();
-  // TODO: implement
-  // readonly cursorCoordinates = this.keyPressedSubject.asObservable();
+  private readonly cursorCoordinates = signal<CursorCoordinates>({x: 0, y: 0});
   readonly keyPressed = this.keyPressedSubject.asObservable();
 
   constructor() {
@@ -24,15 +27,17 @@ export class PeripheralsService {
     merge(keyboard$, mouse$)
       .pipe(takeUntilDestroyed())
       .subscribe((key) => this.emitKey(key));
+
+    const unlisten = listen<CursorCoordinates>('cursor-moved', (event) =>
+      this.cursorCoordinates.set(event.payload)
+    );
+
+    this.destroyRef.onDestroy(() => unlisten.then((fn) => fn()));
   }
 
   simPress(key: string){
     console.log("Tasto simulato: ", key);
     this.emitKey(key);
-  }
-
-  private emitKey(key: string) {
-    this.keyPressedSubject.next(key);
   }
 
   async emulate(key: string) {
@@ -41,6 +46,14 @@ export class PeripheralsService {
 
   async moveCursor(x: number, y: number) {
     await invoke('move_cursor', { x: Math.round(x), y: Math.round(y) });
+  }
+
+  getCursorCoordinates() {
+    return this.cursorCoordinates.asReadonly();
+  }
+
+  private emitKey(key: string) {
+    this.keyPressedSubject.next(key);
   }
 
 }

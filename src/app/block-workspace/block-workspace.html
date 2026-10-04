@@ -17,22 +17,28 @@
     />
   </mat-form-field>
   <div class="toolbar-actions">
-    <a matButton routerLink=""><mat-icon>arrow_top_left</mat-icon></a>
+    <a matButton="outlined" routerLink=""><mat-icon>arrow_top_left</mat-icon>Indietro</a>
     @if(isRunning()){
       <button matFab (click)="stopCode()"><mat-icon>stop</mat-icon></button>
     } @else{
       <button matFab (click)="runCode()"><mat-icon>play_arrow</mat-icon></button>
     }
     <button matFab (click)="export()"><mat-icon>upload</mat-icon></button>
-    <span class="script-edit-stat">Cursore: {{formattedCoordinates().x}}:{{formattedCoordinates().y}}</span>-
-    <span class="script-edit-stat">Ultimo tasto premuto: {{keyPressed() || 'Nessun tasto'}}</span>
+    <button matFab (click)="toggleOutput()"><mat-icon>{{ showOutput() ? 'code_off' : 'code' }}</mat-icon></button>
+    <span class="script-edit-stat">Cursore: {{formattedCoordinates().x}}:{{formattedCoordinates().y}}</span>
+    -
+    <span class="script-edit-stat">{{keyPressed() || 'Nessun tasto premuto'}}</span>
   </div>
 </div>
 <div class="editor">
-  <div #blocklyDiv id="blocklyDiv"></div>
-  <div id="outputPane">
-    <pre id="generatedCode"><code>{{ code() }}</code></pre>
-    <span>Console:</span>
-    <textarea  id="output" [contentEditable]="false" [value]="output()"></textarea>
-  </div>
+  <div #blocklyDiv id="blocklyDiv" class="blockly-canvas"></div>
+  @if(showOutput()){
+    <div class="output-panel">
+      <h3>Codice generato:</h3>
+      <pre class="generated-code"><code>{{ code() }}</code></pre>
+      <mat-divider></mat-divider>
+      <h3>Output console:</h3>
+      <textarea class="output-console" [contentEditable]="false" [value]="output()"></textarea>
+    </div>
+  }
 </div>

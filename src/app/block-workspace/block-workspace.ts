@@ -24,6 +24,7 @@ import {MatButton, MatFabButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {CursorCoordinates, FormattedCursorCoordinates} from '../../interfaces/peripherals';
+import {MatDivider} from '@angular/material/list';
 
 @Component({
   imports: [
@@ -34,7 +35,8 @@ import {CursorCoordinates, FormattedCursorCoordinates} from '../../interfaces/pe
     MatFabButton,
     MatFormField,
     MatInput,
-    MatLabel
+    MatLabel,
+    MatDivider
   ],
   selector: 'app-block-workspace',
   styleUrl: './block-workspace.css',
@@ -57,10 +59,11 @@ export class BlockWorkspace {
   readonly blocklyRunning = toSignal(this.blocklyService.blocklyStarted);
   readonly isRunning = computed(() => this.blocklyRunning() === this.id());
 
+  readonly showOutput = signal(false);
   readonly code = signal('');
   readonly output = this.blocklyService.getOutput();
 
-  readonly cursorCoordinates: Signal<CursorCoordinates> = signal({x:0, y:0});
+  readonly cursorCoordinates: Signal<CursorCoordinates> = this.peripheralsService.getCursorCoordinates();
   readonly formattedCoordinates: Signal<FormattedCursorCoordinates> = computed(() => ({
     x:String(this.cursorCoordinates().x).padStart(4, '0'),
     y:String(this.cursorCoordinates().y).padStart(4, '0'),
@@ -121,9 +124,8 @@ export class BlockWorkspace {
     this.blocklyService.stopCode();
   };
 
-  simPress() {
-    const key = 'Mouse 1';
-    this.peripheralsService.simPress(key);
+  toggleOutput(){
+    this.showOutput.set(!this.showOutput());
   }
 
   async saveState(flush: boolean = false){

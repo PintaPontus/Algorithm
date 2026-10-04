@@ -101,6 +101,7 @@ export class StorageService {
   async exportWorkspace(info: WorkspaceInfo) {
     try{
       const path = await save({
+        title: info.title,
         filters: [
           {
             name: 'JSON Script',
@@ -115,7 +116,7 @@ export class StorageService {
         );
       }
     } catch (e) {
-      this.snackBar.open('Failed to export workspace', 'Ok', {
+      this.snackBar.open('Export workspace fallito', 'Ok', {
         duration: 2000,
       });
     }
@@ -134,7 +135,7 @@ export class StorageService {
         await this.setWorkspace(newId, contents);
       }
     } catch (e) {
-      this.snackBar.open('Failed to import workspace', 'Ok', {
+      this.snackBar.open('Import workspace fallito', 'Ok', {
         duration: 2000,
       });
     }

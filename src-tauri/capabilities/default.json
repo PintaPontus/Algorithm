@@ -11,6 +11,5 @@
     "core:window:allow-destroy",
     "dialog:default",
     "fs:default"
-
   ]
 }
