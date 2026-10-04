@@ -3,7 +3,7 @@ import {
   Component, computed,
   DestroyRef,
   ElementRef,
-  inject,
+  inject, Signal,
   signal,
   viewChild
 } from '@angular/core';
@@ -22,6 +22,8 @@ import {ActivatedRoute, RouterLink} from '@angular/router';
 import {WorkspaceInfo} from '../../interfaces/workspace';
 import {MatButton, MatFabButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
+import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {CursorCoordinates, FormattedCursorCoordinates} from '../../interfaces/peripherals';
 
 @Component({
   imports: [
@@ -29,7 +31,10 @@ import {MatIcon} from '@angular/material/icon';
     MatButton,
     MatIcon,
     RouterLink,
-    MatFabButton
+    MatFabButton,
+    MatFormField,
+    MatInput,
+    MatLabel
   ],
   selector: 'app-block-workspace',
   styleUrl: './block-workspace.css',
@@ -55,6 +60,11 @@ export class BlockWorkspace {
   readonly code = signal('');
   readonly output = this.blocklyService.getOutput();
 
+  readonly cursorCoordinates: Signal<CursorCoordinates> = signal({x:0, y:0});
+  readonly formattedCoordinates: Signal<FormattedCursorCoordinates> = computed(() => ({
+    x:String(this.cursorCoordinates().x).padStart(4, '0'),
+    y:String(this.cursorCoordinates().y).padStart(4, '0'),
+  }));
   readonly keyPressed = toSignal(this.peripheralsService.keyPressed);
 
   private workspace: Blockly.WorkspaceSvg | undefined;
@@ -153,4 +163,5 @@ export class BlockWorkspace {
     }
   }
 
+  protected readonly String = String;
 }

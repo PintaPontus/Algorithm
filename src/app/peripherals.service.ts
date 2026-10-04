@@ -7,6 +7,8 @@ import { invoke } from '@tauri-apps/api/core';
 export class PeripheralsService {
 
   private readonly keyPressedSubject = new Subject<string>();
+  // TODO: implement
+  // readonly cursorCoordinates = this.keyPressedSubject.asObservable();
   readonly keyPressed = this.keyPressedSubject.asObservable();
 
   constructor() {
@@ -28,7 +30,7 @@ export class PeripheralsService {
     console.log("Tasto simulato: ", key);
     this.emitKey(key);
   }
-  
+
   private emitKey(key: string) {
     this.keyPressedSubject.next(key);
   }

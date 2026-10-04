@@ -6,14 +6,27 @@
 }
 
 .toolbar{
+  width: 100%;
   padding: 0 1rem;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 1rem;
   margin-bottom: 1rem;
 }
 
-.key-pressed{
+.title-input, .description-input, .title-input-box, .description-input-box{
+  width: 100%;
+}
+
+.toolbar-actions{
+  padding: 0 1rem;
+  align-self: start;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.script-edit-stat{
   font-size: 1.2rem;
   vertical-align: middle;
 }

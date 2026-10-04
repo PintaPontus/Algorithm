@@ -1,14 +1,32 @@
 <div class="toolbar">
-  <a matButton routerLink=""><mat-icon>arrow_top_left</mat-icon></a>
-  @if(isRunning()){
-    <button matFab (click)="stopCode()"><mat-icon>stop</mat-icon></button>
-  } @else{
-    <button matFab (click)="runCode()"><mat-icon>play_arrow</mat-icon></button>
-  }
-  <button matFab (click)="export()"><mat-icon>upload</mat-icon></button>
-<!--  <button matButton="filled" (click)="simPress()">SIM PRESS</button>-->
-<!--  <button matButton="filled" (click)="saveState()">SAVE</button>-->
-  <span class="key-pressed">{{keyPressed() || 'Nessun tasto premuto'}}</span>
+  <mat-form-field class="title-input">
+    <mat-label>Titolo</mat-label>
+    <input
+      [(ngModel)]="title //noinspection ConstantReassignment"
+      class="title-input-box"
+      matInput
+    />
+  </mat-form-field>
+  <mat-form-field class="description-input">
+    <mat-label>Descrizione</mat-label>
+    <input
+      [(ngModel)]="description //noinspection ConstantReassignment"
+      class="description-input-box"
+      matInput
+      placeholder="Inserisci una descrizione"
+    />
+  </mat-form-field>
+  <div class="toolbar-actions">
+    <a matButton routerLink=""><mat-icon>arrow_top_left</mat-icon></a>
+    @if(isRunning()){
+      <button matFab (click)="stopCode()"><mat-icon>stop</mat-icon></button>
+    } @else{
+      <button matFab (click)="runCode()"><mat-icon>play_arrow</mat-icon></button>
+    }
+    <button matFab (click)="export()"><mat-icon>upload</mat-icon></button>
+    <span class="script-edit-stat">Cursore: {{formattedCoordinates().x}}:{{formattedCoordinates().y}}</span>-
+    <span class="script-edit-stat">Ultimo tasto premuto: {{keyPressed() || 'Nessun tasto'}}</span>
+  </div>
 </div>
 <div class="editor">
   <div #blocklyDiv id="blocklyDiv"></div>
