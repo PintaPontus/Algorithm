@@ -48,7 +48,6 @@ pre, code {
 .blockly-canvas {
   flex: 3;
   height: 100%;
-  color: #121316;
 }
 
 .output-panel {

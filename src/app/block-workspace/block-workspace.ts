@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 
 import * as Blockly from 'blockly/core';
+import DarkTheme from '@blockly/theme-dark';
 import 'blockly/blocks';
 import {javascriptGenerator} from 'blockly/javascript';
 
@@ -85,6 +86,7 @@ export class BlockWorkspace {
       if(divEl){
         this.workspace = Blockly.inject(divEl, {
           toolbox,
+          theme: DarkTheme
         });
 
         if (this.workspaceInfo?.state) {
@@ -126,6 +128,11 @@ export class BlockWorkspace {
 
   toggleOutput(){
     this.showOutput.set(!this.showOutput());
+    if (this.workspace) {
+      requestAnimationFrame(() => {
+        Blockly.svgResize(this.workspace as Blockly.WorkspaceSvg);
+      });
+    }
   }
 
   async saveState(flush: boolean = false){
