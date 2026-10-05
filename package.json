@@ -5,7 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "dev": "tauri dev",
-    "build": "tauri build",
+    "build": "ng build",
+    "distribute": "tauri build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -22,9 +23,9 @@
     "@angular/router": "^22.2.0",
     "@blockly/theme-dark": "^13.3.0",
     "@tauri-apps/api": "^2.12.1",
-    "@tauri-apps/plugin-dialog": "~2",
-    "@tauri-apps/plugin-fs": "~2",
-    "@tauri-apps/plugin-store": "~2",
+    "@tauri-apps/plugin-dialog": "2.8.1",
+    "@tauri-apps/plugin-fs": "2.6.0",
+    "@tauri-apps/plugin-store": "2.5.0",
     "blockly": "^13.3.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
