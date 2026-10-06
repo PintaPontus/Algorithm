@@ -96,7 +96,8 @@ export class Editor {
       if(divEl){
         this.workspace = Blockly.inject(divEl, {
           toolbox,
-          theme: DarkTheme
+          theme: DarkTheme,
+          sounds: false
         });
 
         if (storageInfo?.state) {
