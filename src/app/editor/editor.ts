@@ -5,7 +5,7 @@ import {
   ElementRef,
   inject, Signal,
   signal,
-  viewChild
+  viewChild, WritableSignal
 } from '@angular/core';
 
 import * as Blockly from 'blockly/core';
@@ -54,13 +54,21 @@ export class Editor {
   readonly routeParamMap = toSignal(this.route.paramMap);
   readonly blocklyDiv = viewChild<ElementRef<HTMLDivElement>>('blocklyDiv');
 
-  readonly id = computed(() => this.routeParamMap()?.get('id') ?? null);
-  private workspaceInfo: WorkspaceInfo | undefined = undefined;
+  readonly id = computed(() => this.routeParamMap()?.get('id')!);
+  private workspaceState: WritableSignal<{ [key: string]: any; } | undefined> = signal(undefined);
+  private workspaceInfo: Signal<WorkspaceInfo> = computed(() => ({
+    id: this.id(),
+    title: this.title(),
+    description: this.description(),
+    lastUpdated: Date.now(),
+    state: this.workspaceState(),
+    // state: this.workspace ? Blockly.serialization.workspaces.save(this.workspace!) : undefined,
+  }));
   readonly title = signal<string>('');
   readonly description = signal<string>('');
 
-  readonly blocklyRunning = toSignal(this.blocklyService.blocklyStarted);
-  readonly isRunning = computed(() => this.blocklyRunning() === this.id());
+  readonly playingScripts = this.blocklyService.getPlayingScripts();
+  readonly isRunning = computed(() => this.id && this.playingScripts().has(this.id()));
 
   readonly showOutput = signal(false);
   readonly code = signal('');
@@ -78,11 +86,10 @@ export class Editor {
   constructor() {
     afterRenderEffect(async () => {
       await this.clearWorkspace();
-      if(this.id()){
-        this.workspaceInfo = await this.storageService.getWorkspace(this.id()!);
-        this.title.set(this.workspaceInfo?.title ?? this.id()!);
-        this.description.set(this.workspaceInfo?.description ?? '');
-      }
+      const storageInfo = await this.storageService.getWorkspace(this.id());
+      this.title.set(storageInfo?.title ?? this.id());
+      this.description.set(storageInfo?.description ?? '');
+      this.workspaceState.set(storageInfo?.state);
 
       const divEl = this.blocklyDiv()?.nativeElement;
       if(divEl){
@@ -91,8 +98,8 @@ export class Editor {
           theme: DarkTheme
         });
 
-        if (this.workspaceInfo?.state) {
-          Blockly.serialization.workspaces.load(this.workspaceInfo.state, this.workspace);
+        if (storageInfo?.state) {
+          Blockly.serialization.workspaces.load(storageInfo?.state, this.workspace);
         }
 
         this.code.set(javascriptGenerator.workspaceToCode(this.workspace));
@@ -121,11 +128,11 @@ export class Editor {
   }
 
   runCode()  {
-    this.blocklyService.startCode(this.id()!, this.code());
+    this.blocklyService.startCode(this.workspaceInfo(), this.code());
   };
 
   stopCode()  {
-    this.blocklyService.stopCode();
+    this.blocklyService.stop(this.workspaceInfo());
   };
 
   toggleOutput(){
@@ -138,30 +145,20 @@ export class Editor {
   }
 
   async saveState(flush: boolean = false){
-    if(this.id()){
-      await this.storageService.setWorkspace(
-        this.id()!,
-        this.generateWorkspaceInfo(),
-      );
+    if(this.workspace){
+      this.workspaceState.set(Blockly.serialization.workspaces.save(this.workspace));
     }
+    await this.storageService.setWorkspace(
+      this.id(),
+      this.workspaceInfo(),
+    );
     if(flush){
       await this.storageService.flushWorkspace();
     }
   }
 
   async export(){
-    const info = this.generateWorkspaceInfo();
-    await this.storageService.exportWorkspace(info);
-  }
-
-  private generateWorkspaceInfo(): WorkspaceInfo {
-    return {
-      id: this.id()!,
-      title: this.title(),
-      description: this.description(),
-      lastUpdated: Date.now(),
-      state: this.workspace ? Blockly.serialization.workspaces.save(this.workspace!) : undefined,
-    }
+    await this.storageService.exportWorkspace(this.workspaceInfo()!);
   }
 
   private async clearWorkspace(save: boolean = false){
@@ -174,5 +171,4 @@ export class Editor {
     }
   }
 
-  protected readonly String = String;
 }

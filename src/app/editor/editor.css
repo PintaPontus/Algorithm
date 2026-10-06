@@ -51,6 +51,7 @@ pre, code {
 }
 
 .output-panel {
+  width: 300px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -70,5 +71,6 @@ pre, code {
   flex: 1;
   resize: none;
   border: 1px solid var(--mat-sys-on-surface);
+  overflow: auto;
 }
 

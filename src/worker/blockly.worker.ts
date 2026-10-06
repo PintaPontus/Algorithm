@@ -52,7 +52,6 @@ function run(code: string) {
   }
 
   for (const handler of startHandlers) {
-    post({type: 'log', message: 'Programma avviato!', level: "info"});
     void guard(handler);
   }
 }

@@ -36,7 +36,10 @@ export class Dashboard {
   private readonly storageService = inject(StorageService);
 
   readonly textSearch = signal('');
-  readonly playingScript = signal<string|undefined>(undefined);
+  readonly playingScript = this.blocklyService.getPlayingScripts();
+
+  readonly showOutput = signal(false);
+  readonly outputConsole = this.blocklyService.getOutput();
 
   readonly scriptList = resource({
     loader: ()=>{
@@ -48,17 +51,19 @@ export class Dashboard {
   readonly filteredScriptList = computed(()=>{
     return this.scriptList.value().filter((script)=>{
       return script.title.toLowerCase().includes(this.textSearch().toLowerCase());
-    });
+    }).sort((a, b) => a.title.localeCompare(b.title));
   })
 
-  async playWorkspace(workspaceId: string) {
-    await this.blocklyService.startId(workspaceId);
-    this.playingScript.set(workspaceId);
+  async playWorkspace(workspaceInfo: WorkspaceInfo) {
+    await this.blocklyService.start(workspaceInfo);
+  }
+
+  async stopWorkspace(workspaceInfo: WorkspaceInfo) {
+    this.blocklyService.stop(workspaceInfo);
   }
 
   async stopAll() {
-    this.blocklyService.stopCode();
-    this.playingScript.set(undefined);
+    this.blocklyService.stopAll();
   }
 
   async deleteWorkspace(workspaceId: string) {
@@ -78,6 +83,14 @@ export class Dashboard {
   async import(){
     await this.storageService.importWorkspace();
     this.scriptList.reload();
+  }
+
+  async debug(){
+    await this.storageService.print();
+  }
+
+  toggleOutput(){
+    this.showOutput.set(!this.showOutput());
   }
 
   protected readonly Array = Array;

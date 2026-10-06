@@ -1,62 +1,78 @@
 @let newScriptId = crypto.randomUUID();
-<div class="dashboard-actions">
-  <mat-form-field class="search-input">
-    <mat-label>Ricerca Script</mat-label>
-    <input
-      [(ngModel)]="textSearch //noinspection ConstantReassignment"
-      matInput
-      placeholder="Cerca uno Script"
-    />
-  </mat-form-field>
-  <a matFab [routerLink]="`/script/${newScriptId}`" matTooltip="Aggiungi">
-    <mat-icon>add</mat-icon>
-  </a>
-  <button matFab (click)="import()" matTooltip="Importa">
-    <mat-icon>download</mat-icon>
-  </button>
-</div>
-<div class="script-list">
-  @if(scriptList.value().length === 0){
-    <div class="script-empty">
-      <h3>Crea il tuo primo script</h3>
-      <a matFab extended="true" [routerLink]="`/script/${newScriptId}`">
-        <mat-icon>add</mat-icon>
-        Aggiungi
-      </a>
-    </div>
-  } @else if (filteredScriptList().length === 0){
-    <div class="script-empty">Nessuno script trovato: "{{textSearch()}}"</div>
-  } @else {
-    @for (script of filteredScriptList(); track script.id){
-      <mat-card appearance="filled">
-        <mat-card-header>
-          <mat-card-title>{{script.title}}</mat-card-title>
-          <mat-card-subtitle>{{script.description}}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-actions align="end" class="script-action">
-          @if(playingScript() === script.id){
-            <button matMiniFab (click)="stopAll()" matTooltip="Avvia">
-              <mat-icon>stop</mat-icon>
+<div class="script-list-container">
+  <div class="dashboard-actions">
+    <mat-form-field class="search-input">
+      <mat-label>Ricerca Script</mat-label>
+      <input
+        [(ngModel)]="textSearch //noinspection ConstantReassignment"
+        matInput
+        placeholder="Cerca uno Script"
+      />
+    </mat-form-field>
+    <a matFab [routerLink]="`/script/${newScriptId}`" matTooltip="Aggiungi">
+      <mat-icon>add</mat-icon>
+    </a>
+    <button matFab (click)="import()" matTooltip="Importa">
+      <mat-icon>download</mat-icon>
+    </button>
+    <button matFab (click)="stopAll()" matTooltip="Ferma tutti">
+      <mat-icon>stop</mat-icon>
+    </button>
+    <button matFab (click)="toggleOutput()" [matTooltip]="showOutput() ? 'Nascondi output' : 'Mostra output'">
+      <mat-icon>{{ showOutput() ? 'code_off' : 'code' }}</mat-icon>
+    </button>
+<!--    <button matFab (click)="debug()" matTooltip="Debug">-->
+<!--      <mat-icon>bug_report</mat-icon>-->
+<!--    </button>-->
+  </div>
+  <div class="script-list">
+    @if(scriptList.value().length === 0){
+      <div class="script-empty">
+        <h3>Crea il tuo primo script</h3>
+        <a matFab extended="true" [routerLink]="`/script/${newScriptId}`">
+          <mat-icon>add</mat-icon>
+          Aggiungi
+        </a>
+      </div>
+    } @else if (filteredScriptList().length === 0){
+      <div class="script-empty">Nessuno script trovato: "{{textSearch()}}"</div>
+    } @else {
+      @for (script of filteredScriptList(); track script.id){
+        <mat-card appearance="filled">
+          <mat-card-header>
+            <mat-card-title>{{script.title}}</mat-card-title>
+            <mat-card-subtitle>{{script.description}}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-actions align="end" class="script-action">
+            @if(playingScript().has(script.id)){
+              <button matMiniFab (click)="stopWorkspace(script)" matTooltip="Avvia">
+                <mat-icon>stop</mat-icon>
+              </button>
+            } @else{
+              <button matMiniFab (click)="playWorkspace(script)" matTooltip="Ferma">
+                <mat-icon>play_arrow</mat-icon>
+              </button>
+            }
+            <a matMiniFab [routerLink]="`/script/${script.id}`" matTooltip="Modifica">
+              <mat-icon>edit</mat-icon>
+            </a>
+            <button matMiniFab (click)="duplicate(script)" matTooltip="Duplica">
+              <mat-icon>content_copy</mat-icon>
             </button>
-          } @else{
-            <button matMiniFab (click)="playWorkspace(script.id)" matTooltip="Ferma">
-              <mat-icon>play_arrow</mat-icon>
+            <button matMiniFab (click)="export(script)" matTooltip="Esporta">
+              <mat-icon>upload</mat-icon>
             </button>
-          }
-          <a matMiniFab [routerLink]="`/script/${script.id}`" matTooltip="Modifica">
-            <mat-icon>edit</mat-icon>
-          </a>
-          <button matMiniFab (click)="duplicate(script)" matTooltip="Duplica">
-            <mat-icon>content_copy</mat-icon>
-          </button>
-          <button matMiniFab (click)="export(script)" matTooltip="Esporta">
-            <mat-icon>upload</mat-icon>
-          </button>
-          <button matMiniFab (click)="deleteWorkspace(script.id)" matTooltip="Elimina">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </mat-card-actions>
-      </mat-card>
+            <button matMiniFab (click)="deleteWorkspace(script.id)" matTooltip="Elimina">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      }
     }
-  }
+  </div>
 </div>
+@if(showOutput()){
+  <div class="output-panel">
+    <textarea class="output-console" readonly [value]="outputConsole()"></textarea>
+  </div>
+}

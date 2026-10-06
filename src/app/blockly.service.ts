@@ -4,25 +4,23 @@ import * as Blockly from 'blockly/core';
 import 'blockly/blocks';
 import {customBlocks} from '../interfaces/toolbox';
 import * as It from 'blockly/msg/it';
-import {Subject, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {PeripheralsService} from './peripherals.service';
 import {JavascriptGenerator, javascriptGenerator} from 'blockly/javascript';
-import {StorageService} from './storage.service';
 import {MainToWorker, WorkerToMain} from '../interfaces/worker';
+import {WorkspaceInfo} from '../interfaces/workspace';
 
 @Service()
 export class BlocklyService {
 
   private readonly peripheralsService = inject(PeripheralsService);
-  private readonly storageService = inject(StorageService);
 
-  private readonly blocklyStartedSubject = new Subject<string|undefined>();
-  readonly blocklyStarted = this.blocklyStartedSubject.asObservable();
+  private readonly playingScripts = signal<Set<string>>(new Set());
 
   private readonly output = signal('');
 
-  private listeners = new Subscription();
-  private worker: Worker | undefined;
+  private listenersMap: Map<string, Subscription> = new Map();
+  private workerMap: Map<string, Worker> = new Map();
 
   constructor() {
     Blockly.setLocale(It as unknown as { [key: string]: string });
@@ -30,25 +28,26 @@ export class BlocklyService {
     this.setupGenerator();
   }
 
-  async startId(id: string){
-    const workspaceInfo = await this.storageService.getWorkspace(id);
-    if(workspaceInfo?.state){
-      const code = this.generateCodeFromState(workspaceInfo.state);
-      this.startCode(id,code);
+  async start(info: WorkspaceInfo){
+    if(info?.state){
+      const code = this.generateCodeFromState(info.state);
+      this.startCode(info,code);
     }
   }
 
-  startCode(id: string, code: string) {
-    this.stopCode();
-    this.output.set('');
+  startCode(info: WorkspaceInfo, code: string) {
+    this.stop(info, true);
 
-    this.worker = new Worker(
+    this.workerMap.set(
+      info.id,
+      new Worker(
       new URL('../worker/blockly.worker', import.meta.url),
-      {type: 'module'},
+        {type: 'module'},
+      )
     );
-    const send = (message: MainToWorker) => this.worker?.postMessage(message);
+    const send = (message: MainToWorker) => this.workerMap.get(info.id)?.postMessage(message);
 
-    this.worker.onmessage = ({data}: MessageEvent<WorkerToMain>) => {
+    this.workerMap.get(info.id)!.onmessage = ({data}: MessageEvent<WorkerToMain>) => {
       switch (data.type) {
         case 'print':
           this.print(data.message);
@@ -70,32 +69,57 @@ export class BlocklyService {
     };
 
     // Errori non gestiti (es. sintassi del codice generato)
-    this.worker.onerror = (event) => {
+    this.workerMap.get(info.id)!.onerror = (event) => {
       event.preventDefault();
       this.writeLog(event.message, 'error');
     };
 
-    // Inoltra i tasti al worker finché lo script è attivo
-    this.listeners.add(
+    this.listenersMap.set(info.id, new Subscription());
+    this.listenersMap.get(info.id)?.add(
       this.peripheralsService.keyPressed.subscribe(
         (key) => send({type: 'onKey', key})
       )
     );
 
     send({type: 'onStart', code});
-    this.blocklyStartedSubject.next(id);
+    this.writeLog(`Avviato '${info.title}'`)
+    this.playingScripts.update(set => {
+      const newSet = new Set(set.values());
+      newSet.add(info.id);
+      return newSet;
+    });
   }
 
-  stopCode(){
-    this.worker?.terminate();
-    this.worker = undefined;
-    this.listeners.unsubscribe();
-    this.listeners = new Subscription();
-    this.blocklyStartedSubject.next(undefined);
+  stop(info: WorkspaceInfo, silent = false){
+    this.listenersMap.get(info.id)?.unsubscribe();
+    this.listenersMap.delete(info.id);
+    this.workerMap.get(info.id)?.terminate();
+    this.workerMap.delete(info.id);
+    this.playingScripts.update(set => {
+      const newSet = new Set(set);
+      newSet.delete(info.id);
+      return newSet;
+    });
+    if(!silent){
+      this.writeLog(`Interrotto '${info.title}'`);
+    }
+  }
+
+  stopAll(){
+    this.listenersMap.forEach(list=> list.unsubscribe());
+    this.listenersMap.clear();
+    this.workerMap.forEach(list=> list.terminate());
+    this.workerMap.clear();
+    this.playingScripts.set(new Set());
+    this.writeLog(`Interrotti tutti gli script`);
   }
 
   getOutput() {
     return this.output.asReadonly();
+  }
+
+  getPlayingScripts() {
+    return this.playingScripts.asReadonly();
   }
 
   private setupGenerator(){
