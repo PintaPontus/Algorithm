@@ -44,8 +44,12 @@ export class PeripheralsService {
     await invoke('emulate_key', { key });
   }
 
-  async moveCursor(x: number, y: number) {
-    await invoke('move_cursor', { x: Math.round(x), y: Math.round(y) });
+  async moveCursor(coords: CursorCoordinates) {
+    await invoke('move_cursor', { coords });
+  }
+
+  async dragCursor(start: CursorCoordinates, finish: CursorCoordinates) {
+    await invoke('drag_cursor', { start, finish }).catch(e => {console.error(e)});
   }
 
   getCursorCoordinates() {

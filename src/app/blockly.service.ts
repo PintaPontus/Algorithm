@@ -67,9 +67,14 @@ export class BlocklyService {
             .catch(_ => this.writeLog(`Emulazione fallita: ${data.key}`));
           break;
         case 'moveCursor':
-          this.peripheralsService.moveCursor(data.x, data.y)
-            .then(_ => this.writeLog(`Movimento cursore: ${data.x}, ${data.y}`))
-            .catch(_ => this.writeLog(`Movimento fallito: ${data.x}, ${data.y}`));
+          this.peripheralsService.moveCursor(data.coords)
+            .then(_ => this.writeLog(`Movimento cursore: ${data.coords.x}:${data.coords.y}`))
+            .catch(_ => this.writeLog(`Movimento fallito: ${data.coords.x}:${data.coords.y}`));
+          break;
+        case 'dragCursor':
+          this.peripheralsService.dragCursor(data.start, data.finish)
+            .then(_ => this.writeLog(`Trascinamento cursore: ${data.start.x}:${data.start.y} - ${data.finish.x}:${data.finish.y}`))
+            .catch(_ => this.writeLog(`Movimento fallito: ${data.start.x}:${data.start.y} - ${data.finish.x}:${data.finish.y}`));
           break;
       }
     };
@@ -157,9 +162,20 @@ export class BlocklyService {
     };
 
     javascriptGenerator.forBlock['move_cursor'] = function (block: any, generator: JavascriptGenerator) {
+      const coords = generator.valueToCode(block, 'COORDS', Order.NONE)  || JSON.stringify({});
+      return `moveCursor(${coords});\n`;
+    };
+
+    javascriptGenerator.forBlock['drag_cursor'] = function (block: any, generator: JavascriptGenerator) {
+      const start = generator.valueToCode(block, 'START', Order.NONE)  || JSON.stringify({});
+      const finish = generator.valueToCode(block, 'FINISH', Order.NONE)  || JSON.stringify({});
+      return `dragCursor(${start}, ${finish});\n`;
+    };
+
+    javascriptGenerator.forBlock['cursor_coords'] = function (block: any, generator: JavascriptGenerator) {
       const x = generator.valueToCode(block, 'X', Order.NONE) || "0";
       const y = generator.valueToCode(block, 'Y', Order.NONE) || "0";
-      return `moveCursor(${x}, ${y});\n`;
+      return [`{x: ${x}, y: ${y}}`, Order.ATOMIC];
     };
 
     javascriptGenerator.forBlock['on_start'] = function (block: any, generator: JavascriptGenerator) {

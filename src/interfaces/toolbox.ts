@@ -147,7 +147,9 @@ export const toolbox: Blockly.utils.toolbox.ToolboxInfo = {
       contents:[
         { kind: 'block', type: 'press_key' },
         { kind: 'block', type: 'mkb_key' },
-        { kind: 'block', type: 'move_cursor' }
+        { kind: 'block', type: 'move_cursor' },
+        { kind: 'block', type: 'drag_cursor' },
+        { kind: 'block', type: 'cursor_coords' },
       ]
     },
   ],
@@ -238,7 +240,44 @@ export const customBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
   },
   {
     type: 'move_cursor',
-    message0: 'Movimento cursore a %1 : %2',
+    message0: 'Movimento cursore a %1',
+    args0: [
+      {
+        type: 'input_value',
+        name: 'COORDS',
+        check: 'COORDS',
+      },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#a55b5b',
+    tooltip: 'Muove il cursore alle coordinate',
+  },
+  {
+    type: 'drag_cursor',
+    message0: 'Trascinamento cursore da %1 a %2',
+    args0: [
+      {
+        type: 'input_value',
+        name: 'START',
+        check: 'COORDS',
+      },
+      {
+        type: 'input_value',
+        name: 'FINISH',
+        check: 'COORDS',
+      },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#a55b5b',
+    tooltip: 'Trascina il cursore alle coordinate',
+  },
+  {
+    type: 'cursor_coords',
+    message0: 'X:%1 - Y:%2',
     args0: [
       {
         type: 'input_value',
@@ -252,10 +291,9 @@ export const customBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
       },
     ],
     inputsInline: true,
-    previousStatement: null,
-    nextStatement: null,
+    output: 'COORDS',
     colour: '#a55b5b',
-    tooltip: 'Muove il cursore a X : Y',
+    tooltip: 'Una coordinata del cursore',
   },
   {
     type: 'mkb_key',

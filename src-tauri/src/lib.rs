@@ -22,7 +22,7 @@ pub fn run() {
             }
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![emulate_key, move_cursor])
+        .invoke_handler(tauri::generate_handler![emulate_key, move_cursor, drag_cursor])
         .run(tauri::generate_context!())
         .expect("error while building tauri application");
 }
@@ -33,8 +33,13 @@ fn emulate_key(key: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn move_cursor(x: i32, y: i32) -> Result<(), String> {
-    emulation::core::move_cursor(x, y)
+fn move_cursor(coords: CursorCoordinates) -> Result<(), String> {
+    emulation::core::move_cursor(coords)
+}
+
+#[tauri::command]
+fn drag_cursor(start: CursorCoordinates, finish: CursorCoordinates) -> Result<(), String> {
+  emulation::core::drag_cursor(start, finish)
 }
 
 fn spawn_cursor_watcher(app: AppHandle) {

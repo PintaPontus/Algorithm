@@ -1,4 +1,5 @@
 import type {MainToWorker, WorkerToMain} from '../interfaces/worker';
+import {CursorCoordinates} from '../interfaces/peripherals';
 
 type Handler = () => void | Promise<void>;
 
@@ -27,8 +28,11 @@ const onKey = (key: string, callback: Handler) => {
 
 const print = (message: unknown) => post({type: 'print', message: String(message)});
 const pressKey = (key: unknown) => post({type: 'pressKey', key: String(key)});
-const moveCursor = (x: unknown, y: unknown) =>
-  post({type: 'moveCursor', x: Number(x), y: Number(y)});
+const moveCursor = (coords: CursorCoordinates) =>
+  post({type: 'moveCursor', coords});
+
+const dragCursor = (start: CursorCoordinates, finish: CursorCoordinates) =>
+  post({type: 'dragCursor', start, finish});
 
 const abort = () => post({type: 'abort'});
 
@@ -40,6 +44,7 @@ async function run(code: string) {
       'print',
       'pressKey',
       'moveCursor',
+      'dragCursor',
       'abort',
       code
     )(
@@ -48,6 +53,7 @@ async function run(code: string) {
       print,
       pressKey,
       moveCursor,
+      dragCursor,
       abort
     );
   } catch (e) {

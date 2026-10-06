@@ -1,3 +1,5 @@
+import {CursorCoordinates} from './peripherals';
+
 export type MainToWorker =
   | { type: 'onStart'; code: string }
   | { type: 'onKey'; key: string };
@@ -8,5 +10,6 @@ export type WorkerToMain =
   | { type: 'abort' }
   | { type: 'print'; message: string }
   | { type: 'pressKey'; key: string }
-  | { type: 'moveCursor'; x: number; y: number }
+  | { type: 'moveCursor'; coords: CursorCoordinates }
+  | { type: 'dragCursor'; start: CursorCoordinates; finish: CursorCoordinates }
   | { type: 'log'; message: string, level: 'info' | 'error'};
