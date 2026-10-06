@@ -72,7 +72,5 @@
   </div>
 </div>
 @if(showOutput()){
-  <div class="output-panel">
-    <textarea class="output-console" readonly [value]="outputConsole()"></textarea>
-  </div>
+  <app-console class="output-console"></app-console>
 }

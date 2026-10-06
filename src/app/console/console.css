@@ -1,0 +1,41 @@
+:host{
+  position: relative;
+}
+
+.console-field {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.console-field ::ng-deep .mat-mdc-text-field-wrapper {
+  height: 100%;
+  flex: 1;
+}
+
+.console-field ::ng-deep .mat-mdc-form-field-flex {
+  height: 100%;
+}
+
+.console-field ::ng-deep .mat-mdc-form-field-infix {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.console-field textarea {
+  height: 100% !important;
+  width: 100% !important;
+  resize: none;
+  white-space: nowrap;
+}
+
+.actions-container {
+  position: absolute;
+  top: 16px;
+  right: 0;
+  z-index: 2;
+  gap: 1rem;
+  display: inline;
+}

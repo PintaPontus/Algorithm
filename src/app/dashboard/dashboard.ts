@@ -9,6 +9,7 @@ import {StorageService} from '../storage.service';
 import {BlocklyService} from '../blockly.service';
 import {WorkspaceInfo} from '../../interfaces/workspace';
 import {MatTooltip} from '@angular/material/tooltip';
+import {Console} from '../console/console';
 
 @Component({
   imports: [
@@ -25,7 +26,8 @@ import {MatTooltip} from '@angular/material/tooltip';
     MatFabButton,
     RouterLink,
     MatLabel,
-    MatTooltip
+    MatTooltip,
+    Console
   ],
   selector: 'app-dashboard',
   styleUrl: './dashboard.css',
@@ -39,7 +41,6 @@ export class Dashboard {
   readonly playingScript = this.blocklyService.getPlayingScripts();
 
   readonly showOutput = signal(false);
-  readonly outputConsole = this.blocklyService.getOutput();
 
   readonly scriptList = resource({
     loader: ()=>{

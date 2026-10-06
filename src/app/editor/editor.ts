@@ -27,6 +27,7 @@ import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {CursorCoordinates, FormattedCursorCoordinates} from '../../interfaces/peripherals';
 import {MatDivider} from '@angular/material/list';
 import {MatTooltip} from '@angular/material/tooltip';
+import {Console} from '../console/console';
 
 @Component({
   imports: [
@@ -39,7 +40,8 @@ import {MatTooltip} from '@angular/material/tooltip';
     MatInput,
     MatLabel,
     MatDivider,
-    MatTooltip
+    MatTooltip,
+    Console
   ],
   selector: 'app-editor',
   styleUrl: './editor.css',
@@ -72,7 +74,6 @@ export class Editor {
 
   readonly showOutput = signal(false);
   readonly code = signal('');
-  readonly output = this.blocklyService.getOutput();
 
   readonly cursorCoordinates: Signal<CursorCoordinates> = this.peripheralsService.getCursorCoordinates();
   readonly formattedCoordinates: Signal<FormattedCursorCoordinates> = computed(() => ({

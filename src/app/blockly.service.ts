@@ -118,6 +118,10 @@ export class BlocklyService {
     return this.output.asReadonly();
   }
 
+  clearOutput() {
+    return this.output.set('');
+  }
+
   getPlayingScripts() {
     return this.playingScripts.asReadonly();
   }

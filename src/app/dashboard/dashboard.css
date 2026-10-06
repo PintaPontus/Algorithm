@@ -43,14 +43,6 @@
   gap: 0.5rem;
 }
 
-.output-panel {
-  display: flex;
-  width: 300px;
-}
-
-.output-console{
-  flex: 1;
-  resize: none;
-  border: 1px solid var(--mat-sys-on-surface);
-  overflow: auto;
+.output-console {
+  width: 500px;
 }
