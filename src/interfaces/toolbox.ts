@@ -135,6 +135,7 @@ export const toolbox: Blockly.utils.toolbox.ToolboxInfo = {
             KEY: { block: { type: 'mkb_key' } },
           },
         },
+        { kind: 'block', type: 'abort' },
         { kind: 'block', type: 'await' },
         { kind: 'block', type: 'await_ms' },
       ],
@@ -174,6 +175,14 @@ export const customBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     inputsInline: true,
     colour: '#a5935b',
     tooltip: 'Esegue i blocchi contenuti ogni volta che viene premuto il tasto',
+  },
+  {
+    type: 'abort',
+    message0: 'Arresta',
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#a5935b',
+    tooltip: 'Arresta il programma',
   },
   {
     type: 'console_print',

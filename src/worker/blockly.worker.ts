@@ -30,6 +30,7 @@ const pressKey = (key: unknown) => post({type: 'pressKey', key: String(key)});
 const moveCursor = (x: unknown, y: unknown) =>
   post({type: 'moveCursor', x: Number(x), y: Number(y)});
 
+const abort = () => post({type: 'abort'});
 
 async function run(code: string) {
   try {
@@ -39,13 +40,15 @@ async function run(code: string) {
       'print',
       'pressKey',
       'moveCursor',
+      'abort',
       code
     )(
       onStart,
       onKey,
       print,
       pressKey,
-      moveCursor
+      moveCursor,
+      abort
     );
   } catch (e) {
     post({type: 'log', message: String(e), level: "error"});

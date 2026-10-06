@@ -5,6 +5,7 @@ export type MainToWorker =
 /** Messaggi worker -> main thread */
 export type WorkerToMain =
   | { type: 'stop' }
+  | { type: 'abort' }
   | { type: 'print'; message: string }
   | { type: 'pressKey'; key: string }
   | { type: 'moveCursor'; x: number; y: number }

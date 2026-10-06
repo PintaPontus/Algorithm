@@ -36,7 +36,7 @@ export class BlocklyService {
   }
 
   startCode(info: WorkspaceInfo, code: string) {
-    this.stop(info, true);
+    this.stop(info, 'silent');
 
     this.workerMap.set(
       info.id,
@@ -50,7 +50,10 @@ export class BlocklyService {
     this.workerMap.get(info.id)!.onmessage = ({data}: MessageEvent<WorkerToMain>) => {
       switch (data.type) {
         case 'stop':
-          this.selfStop(info);
+          this.stop(info, 'finish');
+          break;
+        case 'abort':
+          this.stop(info, 'abort');
           break;
         case 'print':
           this.print(data.message);
@@ -93,12 +96,7 @@ export class BlocklyService {
     });
   }
 
-  selfStop(info: WorkspaceInfo){
-    this.stop(info, true);
-    this.writeLog(`Terminato '${info.title}'`);
-  }
-
-  stop(info: WorkspaceInfo, silent = false){
+  stop(info: WorkspaceInfo, mode: 'finish' | 'interrupt' | 'silent' | 'abort' = 'interrupt'){
     this.listenersMap.get(info.id)?.unsubscribe();
     this.listenersMap.delete(info.id);
     this.workerMap.get(info.id)?.terminate();
@@ -108,8 +106,16 @@ export class BlocklyService {
       newSet.delete(info.id);
       return newSet;
     });
-    if(!silent){
-      this.writeLog(`Interrotto '${info.title}'`);
+    switch(mode){
+      case 'finish':
+        this.writeLog(`Terminato '${info.title}'`);
+        break;
+      case 'interrupt':
+        this.writeLog(`Interrotto '${info.title}'`);
+        break;
+      case 'abort':
+        this.writeLog(`Abortito '${info.title}'`);
+        break;
     }
   }
 
@@ -165,6 +171,10 @@ export class BlocklyService {
       const key = generator.valueToCode(block, 'KEY', Order.NONE) || "''";
       const body = generator.statementToCode(block, 'DO');
       return `onKey(${key}, async () => {\n${body}});\n`;
+    };
+
+    javascriptGenerator.forBlock['abort'] = function () {
+      return `abort();\n`;
     };
 
     javascriptGenerator.forBlock['await'] = function (block: any, generator: JavascriptGenerator) {
