@@ -1,5 +1,5 @@
 <mat-form-field class="console-field">
-  <textarea matInput [value]="output()" readonly></textarea>
+  <textarea matInput [value]="text() ?? output()" readonly></textarea>
   <div class="actions-container">
     <button
       matIconButton
@@ -8,12 +8,14 @@
       class="action-button">
       <mat-icon>content_copy</mat-icon>
     </button>
-    <button
-      matIconButton
-      matTooltip="Svuota"
-      (click)="clear()"
-      class="action-button">
-      <mat-icon>close</mat-icon>
-    </button>
+    @if(!text()){
+      <button
+        matIconButton
+        matTooltip="Svuota"
+        (click)="clear()"
+        class="action-button">
+        <mat-icon>close</mat-icon>
+      </button>
+    }
   </div>
 </mat-form-field>

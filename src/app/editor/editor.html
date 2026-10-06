@@ -30,12 +30,13 @@
     <span class="script-edit-stat">{{keyPressed() || 'Nessun tasto premuto'}}</span>
   </div>
 </div>
-<div class="editor">
+<div class="editor-workspace">
   <div #blocklyDiv id="blocklyDiv" class="blockly-canvas"></div>
   @if(showOutput()){
     <div class="output-panel">
       <h3>Codice generato:</h3>
-      <pre class="generated-code"><code>{{ code() }}</code></pre>
+<!--      <pre class="generated-code"><code>{{ code() }}</code></pre>-->
+      <app-console class="generated-code" [text]="code()"></app-console>
       <mat-divider></mat-divider>
       <h3>Output console:</h3>
       <app-console class="output-console"></app-console>
