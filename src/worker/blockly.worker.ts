@@ -30,7 +30,8 @@ const pressKey = (key: unknown) => post({type: 'pressKey', key: String(key)});
 const moveCursor = (x: unknown, y: unknown) =>
   post({type: 'moveCursor', x: Number(x), y: Number(y)});
 
-function run(code: string) {
+
+async function run(code: string) {
   try {
     new Function(
       'onStart',
@@ -44,22 +45,23 @@ function run(code: string) {
       onKey,
       print,
       pressKey,
-      moveCursor,
+      moveCursor
     );
   } catch (e) {
     post({type: 'log', message: String(e), level: "error"});
     return;
   }
 
-  for (const handler of startHandlers) {
-    void guard(handler);
-  }
+  await Promise.allSettled(
+    startHandlers.map(handler => guard(handler))
+  );
+  post({type: 'stop'});
 }
 
 addEventListener('message', ({data}: MessageEvent<MainToWorker>) => {
   switch (data.type) {
     case 'onStart':
-      run(data.code);
+      void run(data.code);
       break;
     case 'onKey': {
       const handlers = keyHandlers.get(data.key);

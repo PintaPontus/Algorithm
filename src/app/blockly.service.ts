@@ -49,6 +49,9 @@ export class BlocklyService {
 
     this.workerMap.get(info.id)!.onmessage = ({data}: MessageEvent<WorkerToMain>) => {
       switch (data.type) {
+        case 'stop':
+          this.selfStop(info);
+          break;
         case 'print':
           this.print(data.message);
           break;
@@ -90,6 +93,11 @@ export class BlocklyService {
     });
   }
 
+  selfStop(info: WorkspaceInfo){
+    this.stop(info, true);
+    this.writeLog(`Terminato '${info.title}'`);
+  }
+
   stop(info: WorkspaceInfo, silent = false){
     this.listenersMap.get(info.id)?.unsubscribe();
     this.listenersMap.delete(info.id);
@@ -127,7 +135,7 @@ export class BlocklyService {
   }
 
   private setupGenerator(){
-    javascriptGenerator.forBlock['text_print'] = function (block: any, generator: JavascriptGenerator) {
+    javascriptGenerator.forBlock['console_print'] = function (block: any, generator: JavascriptGenerator) {
       const msg = generator.valueToCode(block, 'TEXT', Order.NONE) || "''";
       return `print(${msg});\n`;
     };

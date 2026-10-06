@@ -35,7 +35,6 @@ export const toolbox: Blockly.utils.toolbox.ToolboxInfo = {
             BY: { shadow: { type: 'math_number', fields: { NUM: 1 } } },
           },
         },
-        // Interrompi / continua
         { kind: 'block', type: 'controls_flow_statements' },
       ],
     },
@@ -54,15 +53,79 @@ export const toolbox: Blockly.utils.toolbox.ToolboxInfo = {
       colour: '#5ba58c',
       contents: [
         { kind: 'block', type: 'text' },
-        { kind: 'block', type: 'text_print' },
+        { kind: 'block', type: 'console_print'},
       ],
     },
-    { kind: 'category', name: 'Variabili', colour: '330', custom: 'VARIABLE' },
-    { kind: 'category', name: 'Funzioni', colour: '290', custom: 'PROCEDURE' },
+    { kind: 'category', name: 'Variabili', colour: '#a55b80', custom: 'VARIABLE' },
+    // TODO: implement add, remove
+    {
+      kind: "category",
+      name: "Liste",
+      categorystyle: "list_category",
+      contents: [
+        {
+          kind: "block",
+          type: "lists_create_empty"
+        },
+        {
+          kind: "block",
+          type: "lists_create_with"
+        },
+        {
+          kind: "block",
+          type: "lists_repeat",
+          inputs: {
+            NUM: {
+              shadow: {
+                type: "math_number",
+                fields: { NUM: 5 }
+              }
+            }
+          }
+        },
+        {
+          kind: "block",
+          type: "lists_length"
+        },
+        {
+          kind: "block",
+          type: "lists_isEmpty"
+        },
+        {
+          kind: "block",
+          type: "lists_indexOf"
+        },
+        {
+          kind: "block",
+          type: "lists_getIndex"
+        },
+        {
+          kind: "block",
+          type: "lists_setIndex"
+        },
+        {
+          kind: "block",
+          type: "lists_getSublist"
+        },
+        {
+          kind: "block",
+          type: "lists_split"
+        },
+        {
+          kind: "block",
+          type: "lists_sort"
+        },
+        {
+          kind: "block",
+          type: "lists_reverse"
+        }
+      ]
+    },
+    { kind: 'category', name: 'Funzioni', colour: '#995ba5', custom: 'PROCEDURE' },
     {
       kind: 'category',
       name: 'Eventi',
-      colour: '45',
+      colour: '#a5935b',
       contents: [
         { kind: 'block', type: 'on_start' },
         {
@@ -72,26 +135,14 @@ export const toolbox: Blockly.utils.toolbox.ToolboxInfo = {
             KEY: { block: { type: 'mkb_key' } },
           },
         },
-        {
-          kind: 'block',
-          type: 'await',
-          inputs: {
-            AMOUNT: { block: { type: 'math_number', fields: { NUM: 5 } } },
-          }
-        },
-        {
-          kind: 'block',
-          type: 'await_ms',
-          inputs: {
-            AMOUNT: { block: { type: 'math_number', fields: { NUM: 5000 } } },
-          }
-        },
+        { kind: 'block', type: 'await' },
+        { kind: 'block', type: 'await_ms' },
       ],
     },
     {
       kind: 'category',
       name: 'Mouse e Tastiera',
-      colour: '160',
+      colour: '#a55b5b',
       contents:[
         { kind: 'block', type: 'press_key' },
         { kind: 'block', type: 'mkb_key' },
@@ -109,9 +160,8 @@ export const customBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
       { type: 'input_dummy' },
       { type: 'input_statement', name: 'DO' },
     ],
-    colour: 45,
+    colour: '#a5935b',
     tooltip: 'Esegue i blocchi contenuti appena premi RUN',
-    helpUrl: '',
   },
   {
     type: 'on_key',
@@ -122,9 +172,20 @@ export const customBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
       { type: 'input_statement', name: 'DO' },
     ],
     inputsInline: true,
-    colour: 45,
+    colour: '#a5935b',
     tooltip: 'Esegue i blocchi contenuti ogni volta che viene premuto il tasto',
-    helpUrl: '',
+  },
+  {
+    type: 'console_print',
+    message0: 'Stampa %1',
+    args0: [
+      { type: 'input_value', name: 'TEXT' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: '#5ba58c',
+    tooltip: 'Stampa in console',
   },
   {
     type: 'await',
@@ -135,9 +196,8 @@ export const customBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     inputsInline: true,
     previousStatement: null,
     nextStatement: null,
-    colour: 45,
+    colour: '#a5935b',
     tooltip: 'Aspetta un certo numero di secondi',
-    helpUrl: '',
   },
   {
     type: 'await_ms',
@@ -148,9 +208,8 @@ export const customBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
     inputsInline: true,
     previousStatement: null,
     nextStatement: null,
-    colour: 45,
+    colour: '#a5935b',
     tooltip: 'Aspetta un certo numero di millisecondi',
-    helpUrl: '',
   },
   {
     type: 'press_key',
@@ -162,15 +221,15 @@ export const customBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
         check: 'MKB_KEY',
       },
     ],
+    inputsInline: true,
     previousStatement: null,
     nextStatement: null,
-    colour: 160,
-    tooltip: '',
-    helpUrl: '',
+    colour: '#a55b5b',
+    tooltip: 'Emula la pressione di un tasto',
   },
   {
     type: 'move_cursor',
-    message0: 'Movimento cursore a %1 %2',
+    message0: 'Movimento cursore a %1 : %2',
     args0: [
       {
         type: 'input_value',
@@ -183,11 +242,11 @@ export const customBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
         check: 'Number',
       },
     ],
+    inputsInline: true,
     previousStatement: null,
     nextStatement: null,
-    colour: 160,
-    tooltip: '',
-    helpUrl: '',
+    colour: '#a55b5b',
+    tooltip: 'Muove il cursore a X : Y',
   },
   {
     type: 'mkb_key',
@@ -238,9 +297,8 @@ export const customBlocks = Blockly.common.createBlockDefinitionsFromJsonArray([
         ],
       },
     ],
-    output: 'MKB_KEY', // tipo di uscita personalizzato
-    colour: 160,
-    tooltip: 'Un tasto',
-    helpUrl: '',
+    output: 'MKB_KEY',
+    colour: '#a55b5b',
+    tooltip: 'Un tasto di mouse o tastiera',
   }
 ]);
